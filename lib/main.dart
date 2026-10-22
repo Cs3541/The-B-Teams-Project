@@ -1,69 +1,67 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import '../views/main_navigation.dart'; //use bottom nav screen
+
 
 void main() {
-  runApp(const MyApp());
+  runApp(const HomeworkTrackerApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class HomeworkTrackerApp extends StatelessWidget {
+  const HomeworkTrackerApp({super.key});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      title: 'Sweet Dreams',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: const SplashScreen(),
+
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Timer(const Duration(seconds: 3), () {
+      Navigator.of(
+        context,
+        ).pushReplacement(MaterialPageRoute(builder: (_) => const MainNavigationScreen())); //Launches bottom nav app
     });
   }
-
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      appBar: AppBar(
-
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-
-        title: Text(widget.title),
-      ),
+      backgroundColor: Colors.blue,
       body: Center(
         child: Column(
-          mainAxisAlignment: .center,
+          mainAxisAlignment: MainAxisAlignment.center,        
           children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
+              Text(
+                'The B Team Presents...',
+                style: TextStyle(
+                  fontSize: 24, 
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold
+                ),
+              ),
+              LoadingAnimationWidget.staggeredDotsWave(
+              color: Colors.white,
+              size: 50,
+              ),
+            ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }
