@@ -1,29 +1,29 @@
 import 'package:flutter/material.dart';
 import '../presenters/analytics_presenter.dart';
 
-class AssignmentListScreen extends StatefulWidget {
-  const AssignmentListScreen({super.key});
+class AnalyticsListScreen extends StatefulWidget {
+  const AnalyticsListScreen({super.key});
 
   @override
-  State<AssignmentListScreen> createState() => _AssignmentListScreenState();
+  State<AnalyticsListScreen> createState() => _AnalyticsListScreenState();
 }
 
-class _AssignmentListScreenState extends State<AssignmentListScreen> {
+class _AnalyticsListScreenState extends State<AnalyticsListScreen> {
   final AnalyticsPresenter _presenter = AnalyticsPresenter();
 
-  void _showAddAssignmentDialog() {
-    String newAssignmentTitle = '';
+  void _showAddAnalyticsDialog() {
+    List<String> newSleepData = [];
 
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Add Assignment'),
+          title: const Text('Add Sleep Data'),
           content: TextField(
             autofocus: true,
-            decoration: const InputDecoration(hintText: 'Enter assignment title'),
+            decoration: const InputDecoration(hintText: 'Enter sleep data'),
             onChanged: (value) {
-                  newAssignmentTitle = value;
+                  newSleepData.add(value);
                 },
               ),
               actions: [
@@ -33,9 +33,9 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
                 ),
                 TextButton(
                   onPressed: () {
-                    if (newAssignmentTitle.trim().isNotEmpty) {
+                    if (newSleepData.isNotEmpty) {
                       setState(() {
-                        _presenter.addAnalytics(newAssignmentTitle.trim());
+                        _presenter.addAnalytics(newSleepData);
                       });
                     }
                     Navigator.pop(context); //Close dialong
@@ -61,19 +61,11 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
         itemCount: analytics.length,
         itemBuilder: (context, index) {
           final analytic = analytics[index];
-          return CheckboxListTile(
-            title: Text(analytic.title),
-            value: analytic.isCompleted,
-              onChanged: (value) {
-                setState(() {
-                  _presenter.toggleCompleted(index);
-                });
-              },
-          );
+          return Text(analytic.sleep.join(', '));
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _showAddAssignmentDialog,
+        onPressed: _showAddAnalyticsDialog,
         child: const Icon(Icons.add),
       ),
     );

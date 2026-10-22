@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import '../presenters/audio_presenter.dart';
 
-class CourseListScreen extends StatefulWidget {
-  const CourseListScreen({super.key});
+class AudioListScreen extends StatefulWidget {
+  const AudioListScreen({super.key});
 
   @override
-  State<CourseListScreen> createState() => _CourseListScreenState();
+  State<AudioListScreen> createState() => _AudioListScreenState();
 }
 
-class _CourseListScreenState extends State<CourseListScreen> {
+class _AudioListScreenState extends State<AudioListScreen> {
   final AudioPresenter presenter = AudioPresenter();
 
-  void _showAddCourseDialog() {
+  void _showAddAudioDialog() {
     String name = '';
     String? description;
 
@@ -73,7 +73,7 @@ class _CourseListScreenState extends State<CourseListScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _showAddCourseDialog,
+        onPressed: _showAddAudioDialog,
         child: const Icon(Icons.add),
       ),
     );
