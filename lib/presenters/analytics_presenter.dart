@@ -5,9 +5,31 @@ class AnalyticsPresenter {
 
   List<Analytics> get analytics => _analytics;
 
-  void addAnalytics(List<String> sleep) {
-    if (sleep.isNotEmpty) {
-      _analytics.add(Analytics(sleep: sleep));
-    }
+
+  void addAnalyticsTest() {
+      _analytics.add(Analytics(hours: 8));
+      _analytics.add(Analytics(hours: 8));
+      _analytics.add(Analytics(hours: 8));
+      _analytics.add(Analytics(hours: 8));
+      _analytics.add(Analytics(hours: 8));
+      _analytics.add(Analytics(hours: 8));
+      _analytics.add(Analytics(hours: 8));
   }
+
+
+  void addAnalytics(Analytics sleep) {
+      _analytics.add(sleep);
+  }
+  
+
+  double getAverageSleep(List<Analytics> a) {
+    double totalSleep = 0;
+  
+    for (int i = 0; i < a.length; i++){
+      totalSleep += a[i].hours;
+    }
+    double avgSleep = totalSleep/a.length;
+    return double.parse((avgSleep).toStringAsFixed(2));
+}
+
 }
