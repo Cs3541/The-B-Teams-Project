@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../presenters/course_presenter.dart';
+import '../presenters/audio_presenter.dart';
 
 class CourseListScreen extends StatefulWidget {
   const CourseListScreen({super.key});
@@ -9,7 +9,7 @@ class CourseListScreen extends StatefulWidget {
 }
 
 class _CourseListScreenState extends State<CourseListScreen> {
-  final CoursePresenter presenter = CoursePresenter();
+  final AudioPresenter presenter = AudioPresenter();
 
   void _showAddCourseDialog() {
     String name = '';
@@ -19,13 +19,13 @@ class _CourseListScreenState extends State<CourseListScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Add Course'),
+          title: const Text('add Audio'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 autofocus: true,
-                decoration: const InputDecoration(labelText: 'Course name'),
+                decoration: const InputDecoration(labelText: 'Audio name'),
                 onChanged: (value) => name = value,
               ),
               TextField(
@@ -43,7 +43,7 @@ class _CourseListScreenState extends State<CourseListScreen> {
               onPressed: () {
                 if (name.trim().isNotEmpty) {
                   setState(() {
-                    presenter.addCourse(name.trim(), description?.trim());
+                    presenter.addAudio(name.trim(), description?.trim());
                   });
                   Navigator.pop(context); //Close dialog
                 }
@@ -58,17 +58,17 @@ class _CourseListScreenState extends State<CourseListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final courses = presenter.courses;
+    final audios = presenter.audios;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Courses')),
+      appBar: AppBar(title: const Text('Audio Tab')),
       body: ListView.builder(
-        itemCount: courses.length,
+        itemCount: audios.length,
         itemBuilder: (context, index) {
-          final course = courses[index];
+          final audio = audios[index];
           return ListTile(
-            title: Text(course.name),
-            subtitle: course.description != null ? Text(course.description!) : null,
+            title: Text(audio.name),
+            subtitle: audio.description != null ? Text(audio.description!) : null,
           );
         },
       ),

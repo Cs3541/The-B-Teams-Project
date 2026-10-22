@@ -1,10 +1,10 @@
 
 
-class Course {
+class Audio {
   final String name;
   final String? description;
 
-  Course({
+  Audio({
     required this.name,
     this.description,
   });

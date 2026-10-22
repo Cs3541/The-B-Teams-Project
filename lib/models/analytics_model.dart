@@ -1,10 +1,10 @@
 
 
-class Assignment {
+class Analytics {
   final String title;
   bool isCompleted;
 
-  Assignment(
+  Analytics(
     {required this.title, 
     this.isCompleted = false
     });
