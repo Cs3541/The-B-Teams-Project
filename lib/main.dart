@@ -15,7 +15,7 @@ class HomeworkTrackerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Homework Tracker',
+      title: 'Sweet Dreams',
       theme: ThemeData(primarySwatch: Colors.blue),
       home: const SplashScreen(),
 
@@ -49,7 +49,7 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,        
           children: [
               Text(
-                'Homework Tracker',
+                'The B Team Presents...',
                 style: TextStyle(
                   fontSize: 24, 
                   color: Colors.white,

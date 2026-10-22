@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../homeScreen.dart';
-import 'assignment_list_screen.dart';
-import 'course_list_screen.dart';
+import '../home_screen.dart';
+import 'analytics_screen.dart';
+import 'audio_screen.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
@@ -38,12 +38,12 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.list),
-            label: 'Assignments',
+            icon: Icon(Icons.assignment),
+            label: 'Analytics',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.book),
-            label: 'Courses',
+            icon: Icon(Icons.music_note),
+            label: 'Audio',
           ),
         ],
       ),

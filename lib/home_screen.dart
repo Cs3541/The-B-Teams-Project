@@ -8,7 +8,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: Text(
-          'Welcome to the Homework Tracker!',
+          'The Sweet Dreams App',
             style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold),
         ),
       ),

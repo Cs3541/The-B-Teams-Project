@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../presenters/assignment_presenter.dart';
+import '../presenters/analytics_presenter.dart';
 
 class AssignmentListScreen extends StatefulWidget {
   const AssignmentListScreen({super.key});
@@ -9,7 +9,7 @@ class AssignmentListScreen extends StatefulWidget {
 }
 
 class _AssignmentListScreenState extends State<AssignmentListScreen> {
-  final AssignmentPresenter _presenter = AssignmentPresenter();
+  final AnalyticsPresenter _presenter = AnalyticsPresenter();
 
   void _showAddAssignmentDialog() {
     String newAssignmentTitle = '';
@@ -35,7 +35,7 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
                   onPressed: () {
                     if (newAssignmentTitle.trim().isNotEmpty) {
                       setState(() {
-                        _presenter.addAssignment(newAssignmentTitle.trim());
+                        _presenter.addAnalytics(newAssignmentTitle.trim());
                       });
                     }
                     Navigator.pop(context); //Close dialong
@@ -51,19 +51,19 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final assignments = _presenter.assignments;
+    final analytics = _presenter.analytics;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Assignments'),
+        title: const Text('Analytics Tab'),
       ),
       body: ListView.builder(
-        itemCount: assignments.length,
+        itemCount: analytics.length,
         itemBuilder: (context, index) {
-          final assignment = assignments[index];
+          final analytic = analytics[index];
           return CheckboxListTile(
-            title: Text(assignment.title),
-            value: assignment.isCompleted,
+            title: Text(analytic.title),
+            value: analytic.isCompleted,
               onChanged: (value) {
                 setState(() {
                   _presenter.toggleCompleted(index);
