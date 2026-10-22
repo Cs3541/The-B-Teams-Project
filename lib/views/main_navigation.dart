@@ -15,8 +15,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   final List<Widget> _screens = <Widget>[
     const HomeScreen(),
-    const AssignmentListScreen(),
-    const CourseListScreen(),
+    const AnalyticsListScreen(),
+    const AudioListScreen(),
   ];
 
   void _onItemTapped(int index) {

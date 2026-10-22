@@ -5,13 +5,9 @@ class AnalyticsPresenter {
 
   List<Analytics> get analytics => _analytics;
 
-  void addAnalytics(String title) {
-    if (title.trim().isNotEmpty) {
-      _analytics.add(Analytics(title: title));
+  void addAnalytics(List<String> sleep) {
+    if (sleep.isNotEmpty) {
+      _analytics.add(Analytics(sleep: sleep));
     }
-  }
-
-  void toggleCompleted(int index) {
-      _analytics[index].isCompleted = !_analytics[index].isCompleted;
   }
 }

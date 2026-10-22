@@ -1,11 +1,9 @@
 
 
 class Analytics {
-  final String title;
-  bool isCompleted;
+  final List<String> sleep;
 
   Analytics(
-    {required this.title, 
-    this.isCompleted = false
+    {required this.sleep, 
     });
 }
