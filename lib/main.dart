@@ -5,11 +5,11 @@ import '../views/main_navigation.dart'; //use bottom nav screen
 
 
 void main() {
-  runApp(const HomeworkTrackerApp());
+  runApp(const SleepAppTracker());
 }
 
-class HomeworkTrackerApp extends StatelessWidget {
-  const HomeworkTrackerApp({super.key});
+class SleepAppTracker extends StatelessWidget {
+  const SleepAppTracker({super.key});
 
   // This widget is the root of your application.
   @override
