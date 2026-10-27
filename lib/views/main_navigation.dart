@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+
 import '../home_screen.dart';
 import 'analytics_screen.dart';
 import 'audio_screen.dart';
+import 'sleep_data_screen.dart';
+import 'sleep_journal_screen.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
@@ -17,6 +20,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     const HomeScreen(),
     const AnalyticsListScreen(),
     const AudioListScreen(),
+    const SleepDataScreen(),
+    const SleepJournalScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -28,22 +33,28 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_selectedIndex],
+      body: IndexedStack(index: _selectedIndex, children: _screens),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
             icon: Icon(Icons.assignment),
             label: 'Analytics',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.music_note),
-            label: 'Audio',
+            label: 'Sleep Audio',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bedtime_outlined),
+            label: 'Sleep Data',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.menu_book_outlined),
+            label: 'Sleep Journal',
           ),
         ],
       ),
