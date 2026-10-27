@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../home_screen.dart';
 import 'analytics_screen.dart';
 import 'audio_screen.dart';
+import 'articles_screen.dart';
 import 'sleep_data_screen.dart';
 import 'sleep_journal_screen.dart';
 
@@ -20,6 +21,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     const HomeScreen(),
     const AnalyticsListScreen(),
     const AudioListScreen(),
+    const ArticlesScreen(),
     const SleepDataScreen(),
     const SleepJournalScreen(),
   ];
@@ -55,6 +57,10 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.menu_book_outlined),
             label: 'Sleep Journal',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.article),
+            label: 'Articles',
           ),
         ],
       ),
