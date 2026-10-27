@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../home_screen.dart';
 import 'analytics_screen.dart';
 import 'audio_screen.dart';
+import 'sleepjournal_view.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
@@ -17,6 +18,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     const HomeScreen(),
     const AnalyticsListScreen(),
     const AudioListScreen(),
+    const SleepJournalView(),
+
   ];
 
   void _onItemTapped(int index) {
@@ -30,6 +33,10 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     return Scaffold(
       body: _screens[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.black,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white70,
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         items: const [
@@ -44,6 +51,10 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.music_note),
             label: 'Audio',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.book),
+            label: 'Sleep Journal',
           ),
         ],
       ),
