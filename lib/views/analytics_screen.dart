@@ -32,11 +32,9 @@ class _AnalyticsListScreenState extends State<AnalyticsListScreen> {
                 color: Colors.black,
                 fontWeight: FontWeight.bold
               ),
-            ),
+            ), 
 
-            //put the chart here
-
-          ]
+           ],
         ),
       ),
     );
