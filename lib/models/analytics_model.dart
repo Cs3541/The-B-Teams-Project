@@ -1,8 +1,6 @@
-
-
 class Analytics {
-  final List<String> sleep;
+  final DateTime date;
+  final String note;
 
-  Analytics(
-    {required this.sleep});
+  Analytics({required this.date, required this.note});
 }
