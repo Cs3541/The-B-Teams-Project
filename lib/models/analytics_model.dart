@@ -1,8 +1,8 @@
 
 
 class Analytics {
-  final double hours;
+  final List<String> sleep;
 
   Analytics(
-    {required this.hours});
+    {required this.sleep});
 }
