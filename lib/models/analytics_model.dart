@@ -1,5 +1,3 @@
-
-
 class Analytics {
   final List<String> sleep;
 
