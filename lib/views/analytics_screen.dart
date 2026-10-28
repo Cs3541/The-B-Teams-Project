@@ -21,7 +21,15 @@ class _AnalyticsListScreenState extends State<AnalyticsListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Analytics Tab'),
+        title: const Text('Analytics Tab',
+          style: TextStyle(
+                fontSize: 24, 
+                color: Colors.white60,
+                fontWeight: FontWeight.bold
+              ),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.deepPurple,
       ),
       body: Center(
         child: Column(
