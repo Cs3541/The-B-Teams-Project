@@ -1,31 +1,15 @@
-import '../models/analytics_model.dart';
+import '../models/sleep_data_model.dart';
 
 class AnalyticsPresenter {
-  final List<Analytics> _analytics = [];
 
-  List<Analytics> get analytics => List.unmodifiable(_analytics);
-
-
-  double getAverageSleep(List<Analytics> a) {
+  double getAverageSleep(List<SleepData> data) {
     double totalSleep = 0;
   
-    for (int i = 0; i < a.length; i++){
-      totalSleep += a[i].sleep;
+    for (int i = 0; i < data.length; i++){
+      SleepData temp = data.elementAt(i);
+      totalSleep += temp.hours;
     }
-    double avgSleep = totalSleep/a.length;
+    double avgSleep = totalSleep/data.length;
     return double.parse((avgSleep).toStringAsFixed(2));
 }
-
-
-  void addAnalytics(List<String> sleep) {
-    final entries = sleep
-        .map((value) => value.trim())
-        .where((value) => value.isNotEmpty)
-        .toList();
-    if (entries.isNotEmpty) {
-      _analytics.add(Analytics(sleep: List.unmodifiable(entries)));
-    }
-  }
-
-  void removeAnalytics(Analytics analytics) => _analytics.remove(analytics);
 }
