@@ -9,7 +9,8 @@ class AnalyticsListScreen extends StatefulWidget {
   const AnalyticsListScreen({super.key});
 
   @override
-  State<AnalyticsListScreen> createState() => _AnalyticsListScreenState();
+  State<AnalyticsListScreen> createState() =>
+      _AnalyticsListScreenState();
 }
 
 class _AnalyticsListScreenState extends State<AnalyticsListScreen> {
