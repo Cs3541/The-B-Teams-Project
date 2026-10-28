@@ -1,35 +1,62 @@
+import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+
+import 'firebase_options.dart';
 
 import 'dart:async';
 
-import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-import 'firebase_options.dart';
 import 'views/main_navigation.dart';
+import 'presenters/settings_presenter.dart';
+import 'views/settings_scope.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Initialize Firebase before starting the app.
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const SleepAppTracker());
 }
 
-class SleepAppTracker extends StatelessWidget {
+class SleepAppTracker extends StatefulWidget {
   const SleepAppTracker({super.key});
 
   @override
+  State<SleepAppTracker> createState() => _SleepAppTrackerState();
+}
+
+class _SleepAppTrackerState extends State<SleepAppTracker> {
+  final _settings = SettingsPresenter();
+
+  @override
+  void initState() {
+    super.initState();
+    _settings.load().catchError((Object _) {
+      // Keep the default background if local preferences are unavailable.
+    });
+  }
+
+  @override
+  void dispose() {
+    _settings.dispose();
+    super.dispose();
+  }
+
+  // This widget is the root of your application.
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Sweet Dreams',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return SettingsScope(
+      presenter: _settings,
+      child: ListenableBuilder(
+        listenable: _settings,
+        builder: (context, child) => MaterialApp(
+          title: 'Sweet Dreams',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+            scaffoldBackgroundColor: _settings.background.color,
+          ),
+          home: const SplashScreen(),
+        ),
       ),
-      home: const SplashScreen(),
     );
   }
 }
@@ -45,25 +72,20 @@ class _SplashScreenState extends State<SplashScreen> {
   Timer? _timer;
 
   @override
-  void initState() {
-    super.initState();
-
-    _timer = Timer(const Duration(seconds: 3), () {
-      if (!mounted) return;
-
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => const MainNavigationScreen(),
-        ),
-      );
-    });
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override
-  void dispose() {
-    // Cancel the timer if the splash screen is removed early.
-    _timer?.cancel();
-    super.dispose();
+  void initState() {
+    super.initState();
+    _timer = Timer(const Duration(seconds: 3), () {
+      if (!mounted) return;
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const MainNavigationScreen()),
+      ); //Launches bottom nav app
+    });
   }
 
   @override
@@ -74,7 +96,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
+            Text(
               'The B Team Presents...',
               style: TextStyle(
                 fontSize: 24,

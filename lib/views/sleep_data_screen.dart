@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'app_top_bar.dart';
+
 import '../presenters/sleep_data_presenter.dart';
 
 class SleepDataScreen extends StatefulWidget {
@@ -85,7 +87,7 @@ class _SleepDataScreenState extends State<SleepDataScreen> {
   Widget build(BuildContext context) {
     final entries = _presenter.entries;
     return Scaffold(
-      appBar: AppBar(title: const Text('Sleep Data')),
+      appBar: const AppTopBar(title: 'Sleep Data'),
       body: entries.isEmpty
           ? const Center(child: Text('No sleep records yet. Tap + to add one.'))
           : ListView.builder(
