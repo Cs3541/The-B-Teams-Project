@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import 'app_top_bar.dart';
 import '../models/articles_model.dart';
 import '../presenters/articles_presenter.dart';
 
@@ -19,9 +21,7 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
     final articles = _presenter.searchArticles(_searchQuery);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sleep Articles'),
-      ),
+      appBar: const AppTopBar(title: 'Sleep Articles'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -29,10 +29,7 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
           children: [
             const Text(
               'Improve Your Sleep',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
 
             const SizedBox(height: 8),
@@ -65,9 +62,7 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
             // Display article list
             Expanded(
               child: articles.isEmpty
-                  ? const Center(
-                      child: Text('No articles found.'),
-                    )
+                  ? const Center(child: Text('No articles found.'))
                   : ListView.builder(
                       itemCount: articles.length,
                       itemBuilder: (context, index) {
@@ -76,8 +71,7 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                         return Card(
                           margin: const EdgeInsets.only(bottom: 12),
                           child: ListTile(
-                            contentPadding:
-                                const EdgeInsets.all(16),
+                            contentPadding: const EdgeInsets.all(16),
 
                             leading: const CircleAvatar(
                               child: Icon(Icons.bedtime),
@@ -91,11 +85,9 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                             ),
 
                             subtitle: Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 8),
+                              padding: const EdgeInsets.only(top: 8),
                               child: Column(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(article.category),
 
@@ -107,9 +99,7 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
 
                                   Text(
                                     '${article.readingTime} min read',
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                    ),
+                                    style: const TextStyle(fontSize: 12),
                                   ),
                                 ],
                               ),
@@ -126,9 +116,7 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      ArticleDetailScreen(
-                                    article: article,
-                                  ),
+                                      ArticleDetailScreen(article: article),
                                 ),
                               );
                             },
@@ -147,17 +135,12 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
 class ArticleDetailScreen extends StatelessWidget {
   final SleepArticle article;
 
-  const ArticleDetailScreen({
-    super.key,
-    required this.article,
-  });
+  const ArticleDetailScreen({super.key, required this.article});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Read Article'),
-      ),
+      appBar: const AppTopBar(title: 'Read Article'),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -173,20 +156,14 @@ class ArticleDetailScreen extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               article.title,
-              style: const TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
             Text('${article.readingTime} min read'),
             const Divider(height: 32),
             Text(
               article.content,
-              style: const TextStyle(
-                fontSize: 17,
-                height: 1.7,
-              ),
+              style: const TextStyle(fontSize: 17, height: 1.7),
             ),
           ],
         ),

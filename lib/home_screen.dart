@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+
+import 'views/app_top_bar.dart';
+
 import 'views/sleep_log_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -7,16 +10,14 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const AppTopBar(title: 'Home'),
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               'The Sweet Dreams App',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 24),
             ElevatedButton.icon(
