@@ -42,6 +42,8 @@ class _AnalyticsListScreenState extends State<AnalyticsListScreen> {
                     
                     xValueMapper: (SleepData data, int index) => index,
                     yValueMapper: (SleepData data, _) => data.hours,
+                    
+                    width: .98, 
                   )
               ]
             )
