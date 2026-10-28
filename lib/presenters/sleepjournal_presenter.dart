@@ -1,46 +1,44 @@
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
 import '../models/sleepjournal_model.dart';
 
 class SleepJournalPresenter {
-  final List<sleepJournal> _journals = [];
+  final List<SleepJournal> _journals = [];
 
-  List<sleepJournal> get journals => _journals;
-
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-    return directory.path;
-  }
-  Future<File> get _localFile async {
-    final path = await _localPath;
-    return File('$path/journal.txt');
+  List<SleepJournal> get journals {
+    final sortedJournals = List<SleepJournal>.from(_journals);
+    sortedJournals.sort(
+      (a, b) => b.journalDate.compareTo(a.journalDate),
+    );
+    return sortedJournals;
   }
 
-  List<sleepJournal> searchJournals(String query){
+  void addJournal({
+    required String title,
+    required String content,
+  }) {
+    final journal = SleepJournal(
+      title: title,
+      content: content,
+      journalDate: DateTime.now(),
+    );
+    _journals.add(journal);
+  }
+
+  List<SleepJournal> searchJournals(String query){
     if(query.toString().isEmpty){
-      return _journals;
+      return journals;
     }
-    return _journals.where((journals){
-      return journals.journalDate.toLowerCase().contains(query.toLowerCase());
+    final matchingJournals = _journals.where((journal) {
+      return journal.title.toLowerCase().contains(query.toLowerCase()) ||
+      journal.content.toLowerCase().contains(query.toLowerCase());
     }).toList();
+
+    matchingJournals.sort(
+      (a, b) => b.journalDate.compareTo(a.journalDate)
+    );
+    return matchingJournals;
   }
 
-  void _deleteJournals(int index){
-    _journals.removeWhere((journals) => _journals.contains(journals),);
-  }
-
-  Future<File> addJournal(String date) async{
-    final file = await _localFile;
-    return file.writeAsString('$journals');
-  }
-
-  Future<String> readJournal() async{
-    try {
-      final Directory directory = await getApplicationDocumentsDirectory();
-      final File journal = File('$directory/journal.text');
-      return await journal.readAsString();
-    } catch (e) {
-     return 'Error reading journal: $e'; 
-    }
+  void deleteJournals(SleepJournal journal){
+    _journals.remove(journal);
   }
 }
