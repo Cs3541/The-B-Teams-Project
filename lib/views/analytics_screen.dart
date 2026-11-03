@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+
+import 'app_top_bar.dart';
 import '../presenters/analytics_presenter.dart';
+import '../presenters/sleep_data_presenter.dart';
+import '../models/sleep_data_model.dart';
+
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class AnalyticsListScreen extends StatefulWidget {
   const AnalyticsListScreen({super.key});
@@ -10,66 +16,49 @@ class AnalyticsListScreen extends StatefulWidget {
 
 class _AnalyticsListScreenState extends State<AnalyticsListScreen> {
   final AnalyticsPresenter _presenter = AnalyticsPresenter();
-
-  void _showAddAnalyticsDialog() {
-    List<String> newSleepData = [];
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Add Sleep Data'),
-          content: TextField(
-            autofocus: true,
-            decoration: const InputDecoration(hintText: 'Enter sleep data'),
-            onChanged: (value) {
-                  newSleepData.add(value);
-                },
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context), //Cancel button
-                    child: const Text('Cancel'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    if (newSleepData.isNotEmpty) {
-                      setState(() {
-                        _presenter.addAnalytics(newSleepData);
-                      });
-                    }
-                    Navigator.pop(context); //Close dialong
-                  },
-                  child: const Text('Add'),
-                ),
-              ],
-        );
-      },
-    );
-  }
-
+  //Currently in test mode. Swap ".addTestEntries()" back to ".entries" after testing is done.
+  final List<SleepData> sleeperData = SleepDataPresenter().addTestEntries();
 
   @override
   Widget build(BuildContext context) {
-    final analytics = _presenter.analytics;
-
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Analytics Tab'),
+      appBar: const AppTopBar(
+        title: 'Analytics Tab',
+        titleStyle: TextStyle(
+          fontSize: 24,
+          color: Colors.white60,
+          fontWeight: FontWeight.bold,
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.deepPurple,
       ),
-      body: ListView.builder(
-        itemCount: analytics.length,
-        itemBuilder: (context, index) {
-          final analytic = analytics[index];
-          return Text(analytic.sleep.join(', '));
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _showAddAnalyticsDialog,
-        child: const Icon(Icons.add),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Average Amount of Sleep: ${_presenter.getAverageSleep(sleeperData)} hours',
+              style: TextStyle(
+                fontSize: 24,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SfCartesianChart(
+              series: <CartesianSeries<SleepData, int>>[
+                ColumnSeries<SleepData, int>(
+                  dataSource: sleeperData,
+
+                  xValueMapper: (SleepData data, int index) => index,
+                  yValueMapper: (SleepData data, _) => data.hours,
+
+                  width: .98,
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
-      
-    
   }
 }
