@@ -16,6 +16,7 @@ class SleepDataPresenter {
 
   void removeEntry(SleepData entry) => _entries.remove(entry);
 
+    //A test class designed to test the analytics section.
     List<SleepData> addTestEntries() {
     _entries.insert(0, SleepData(date: DateTime.utc(1989, 11, 9), hours: 1));
     _entries.insert(0, SleepData(date: DateTime.utc(1989, 11, 10), hours: 9));

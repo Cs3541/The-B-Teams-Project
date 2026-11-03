@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'app_top_bar.dart';
+
 import '../presenters/audio_presenter.dart';
 
 class AudioListScreen extends StatefulWidget {
@@ -66,7 +68,7 @@ class _AudioListScreenState extends State<AudioListScreen> {
   Widget build(BuildContext context) {
     final audios = _presenter.audios;
     return Scaffold(
-      appBar: AppBar(title: const Text('Audio')),
+      appBar: const AppTopBar(title: 'Audio'),
       body: audios.isEmpty
           ? const Center(child: Text('No audio entries yet. Tap + to add one.'))
           : ListView.builder(

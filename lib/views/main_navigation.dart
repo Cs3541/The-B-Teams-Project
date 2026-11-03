@@ -16,26 +16,48 @@ class MainNavigationScreen extends StatefulWidget {
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _selectedIndex = 0;
+  final _navigatorKey = GlobalKey<NavigatorState>();
+  final _tabIndex = ValueNotifier<int>(0);
+
+  @override
+  void dispose() {
+    _tabIndex.dispose();
+    super.dispose();
+  }
 
   final List<Widget> _screens = <Widget>[
     const HomeScreen(),
     const AnalyticsListScreen(),
     const AudioListScreen(),
-    const ArticlesScreen(),
     const SleepDataScreen(),
     const SleepJournalScreen(),
+    const ArticlesScreen(),
   ];
 
   void _onItemTapped(int index) {
+    _navigatorKey.currentState?.popUntil((route) => route.isFirst);
     setState(() {
       _selectedIndex = index;
+      _tabIndex.value = index;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(index: _selectedIndex, children: _screens),
+      body: NavigatorPopHandler<void>(
+        onPopWithResult: (_) => _navigatorKey.currentState!.pop(),
+        child: Navigator(
+          key: _navigatorKey,
+          onGenerateRoute: (_) => MaterialPageRoute<void>(
+            builder: (_) => ValueListenableBuilder<int>(
+              valueListenable: _tabIndex,
+              builder: (_, index, _) =>
+                  IndexedStack(index: index, children: _screens),
+            ),
+          ),
+        ),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex,
@@ -58,10 +80,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             icon: Icon(Icons.menu_book_outlined),
             label: 'Sleep Journal',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.article),
-            label: 'Articles',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.article), label: 'Articles'),
         ],
       ),
     );

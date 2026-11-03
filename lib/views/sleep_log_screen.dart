@@ -1,5 +1,6 @@
-
 import 'package:flutter/material.dart';
+
+import 'app_top_bar.dart';
 
 import '../models/sleep_log_model.dart';
 import '../presenters/sleep_log_presenter.dart';
@@ -46,13 +47,7 @@ class _SleepLogScreenState extends State<SleepLogScreen> {
   }
 
   DateTime _combineDateAndTime(DateTime date, TimeOfDay time) {
-    return DateTime(
-      date.year,
-      date.month,
-      date.day,
-      time.hour,
-      time.minute,
-    );
+    return DateTime(date.year, date.month, date.day, time.hour, time.minute);
   }
 
   DateTime _formatBedtime(TimeOfDay time) {
@@ -102,8 +97,7 @@ class _SleepLogScreenState extends State<SleepLogScreen> {
     final wakeUp = _formatWakeUp(_wakeUpTime!, bedtime);
     final duration = wakeUp.difference(bedtime);
 
-    if (duration <= Duration.zero ||
-        duration > const Duration(hours: 24)) {
+    if (duration <= Duration.zero || duration > const Duration(hours: 24)) {
       return null;
     }
 
@@ -122,8 +116,7 @@ class _SleepLogScreenState extends State<SleepLogScreen> {
   }
 
   String _formatDateTime(DateTime dateTime) {
-    final date = MaterialLocalizations.of(context)
-        .formatMediumDate(dateTime);
+    final date = MaterialLocalizations.of(context).formatMediumDate(dateTime);
     final time = TimeOfDay.fromDateTime(dateTime).format(context);
     return '$date at $time';
   }
@@ -138,11 +131,8 @@ class _SleepLogScreenState extends State<SleepLogScreen> {
     final wakeUp = _formatWakeUp(_wakeUpTime!, bedtime);
     final duration = wakeUp.difference(bedtime);
 
-    if (duration <= Duration.zero ||
-        duration > const Duration(hours: 24)) {
-      _showMessage(
-        'Please choose a valid sleep period of 24 hours or less.',
-      );
+    if (duration <= Duration.zero || duration > const Duration(hours: 24)) {
+      _showMessage('Please choose a valid sleep period of 24 hours or less.');
       return;
     }
 
@@ -197,9 +187,8 @@ class _SleepLogScreenState extends State<SleepLogScreen> {
   }
 
   void _showMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -207,9 +196,7 @@ class _SleepLogScreenState extends State<SleepLogScreen> {
     final preview = _previewDuration;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sleep Log'),
-      ),
+      appBar: const AppTopBar(title: 'Sleep Log'),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : ListView(
@@ -307,9 +294,7 @@ class _SleepLogScreenState extends State<SleepLogScreen> {
                   ..._logs.map(
                     (log) => Card(
                       child: ListTile(
-                        leading: const CircleAvatar(
-                          child: Icon(Icons.bedtime),
-                        ),
+                        leading: const CircleAvatar(child: Icon(Icons.bedtime)),
                         title: Text(log.formattedDuration),
                         subtitle: Text(
                           'Bed: ${_formatDateTime(log.bedtime)}\n'
