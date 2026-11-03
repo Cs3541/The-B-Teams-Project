@@ -93,4 +93,17 @@ class SleepLogPresenter {
         .child(id)
         .remove();
   }
+
+  List<SleepLog> sleepLogs = [];
+
+  void convertSleepLogs() async {
+    final Future<List<SleepLog>> futurelogs = SleepLogPresenter().loadLogs();
+    final List<SleepLog> temp = await futurelogs;
+    sleepLogs = temp;
+  }
+
+  List<SleepLog> getSleepLogs() {
+    convertSleepLogs();
+    return sleepLogs;
+  }
 }

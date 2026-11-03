@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-
 import 'app_top_bar.dart';
 import '../presenters/analytics_presenter.dart';
-import '../presenters/sleep_data_presenter.dart';
-import '../models/sleep_data_model.dart';
+import '../models/sleep_log_model.dart';
+import '../presenters/sleep_log_presenter.dart';
+
 
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -16,8 +16,7 @@ class AnalyticsListScreen extends StatefulWidget {
 
 class _AnalyticsListScreenState extends State<AnalyticsListScreen> {
   final AnalyticsPresenter _presenter = AnalyticsPresenter();
-  //Currently in test mode. Swap ".addTestEntries()" back to ".entries" after testing is done.
-  final List<SleepData> sleeperData = SleepDataPresenter().addTestEntries();
+  final List<SleepLog> sleepLogs = SleepLogPresenter().getSleepLogs();
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +36,7 @@ class _AnalyticsListScreenState extends State<AnalyticsListScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Average Amount of Sleep: ${_presenter.getAverageSleep(sleeperData)} hours',
+              'Average Amount of Sleep: ${_presenter.getAverageSleep(sleepLogs)} hours',
               style: TextStyle(
                 fontSize: 24,
                 color: Colors.black,
@@ -45,12 +44,12 @@ class _AnalyticsListScreenState extends State<AnalyticsListScreen> {
               ),
             ),
             SfCartesianChart(
-              series: <CartesianSeries<SleepData, int>>[
-                ColumnSeries<SleepData, int>(
-                  dataSource: sleeperData,
+              series: <CartesianSeries<SleepLog, int>>[
+                ColumnSeries<SleepLog, int>(
+                  dataSource: sleepLogs,
 
-                  xValueMapper: (SleepData data, int index) => index,
-                  yValueMapper: (SleepData data, _) => data.hours,
+                  xValueMapper: (SleepLog data, int index) => index,
+                  yValueMapper: (SleepLog data, _) => data.duration.inHours,
 
                   width: .98,
                 ),
