@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'app_top_bar.dart';
 import '../models/articles_model.dart';
 import '../presenters/articles_presenter.dart';
 import '../presenters/saved_articles_presenter.dart';
@@ -113,11 +114,16 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-
-      appBar: AppBar(
-        title: const Text('Sleep Articles'),
-        centerTitle: true,
-      ),
+      appBar: const AppTopBar(title: 'Sleep Articles'),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Improve Your Sleep',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
 
       body: _isLoading
 
@@ -133,36 +139,25 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
 
-                  // Screen heading.
-                  const Text(
-                    'Improve Your Sleep',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+            const SizedBox(height: 16),
 
-                  const SizedBox(height: 8),
+            // Display article list
+            Expanded(
+              child: articles.isEmpty
+                  ? const Center(child: Text('No articles found.'))
+                  : ListView.builder(
+                      itemCount: articles.length,
+                      itemBuilder: (context, index) {
+                        final article = articles[index];
 
-                  const Text(
-                    'Discover simple habits for healthier sleep.',
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.grey,
-                    ),
-                  ),
+                        return Card(
+                          margin: const EdgeInsets.only(bottom: 12),
+                          child: ListTile(
+                            contentPadding: const EdgeInsets.all(16),
 
-                  const SizedBox(height: 20),
-
-                  // Search bar.
-                  TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Search articles...',
-                      prefixIcon: const Icon(Icons.search),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
+                            leading: const CircleAvatar(
+                              child: Icon(Icons.bedtime),
+                            ),
 
                     onChanged: (value) {
                       setState(() {
@@ -225,7 +220,12 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                         : ListView.builder(
                             itemCount: _displayedArticles.length,
 
-                            itemBuilder: (context, index) {
+                            subtitle: Padding(
+                              padding: const EdgeInsets.only(top: 8),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(article.category),
 
                               final article =
                                   _displayedArticles[index];
@@ -244,12 +244,9 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                                   contentPadding:
                                       const EdgeInsets.all(12),
 
-                                  // Article title.
-                                  title: Text(
-                                    article.title,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                  Text(
+                                    '${article.readingTime} min read',
+                                    style: const TextStyle(fontSize: 12),
                                   ),
 
                                   // Article category and reading time.
@@ -281,33 +278,64 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                                     ),
                                   ),
 
-                                  // Bookmark button.
-                                  trailing: IconButton(
-                                    icon: Icon(
-                                      isSaved
-                                          ? Icons.bookmark
-                                          : Icons.bookmark_border,
-                                      color: isSaved
-                                          ? Colors.pink
-                                          : Colors.grey,
-                                    ),
-                                    tooltip: isSaved
-                                        ? 'Remove bookmark'
-                                        : 'Save article',
-                                    onPressed: () =>
-                                        _toggleBookmark(article),
-                                  ),
-
-                                  // Open article details.
-                                  onTap: () => _openArticle(article),
+                            // Open selected article
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      ArticleDetailScreen(article: article),
                                 ),
                               );
                             },
                           ),
-                  ),
-                ],
+                        );
+                      },
+                    ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ArticleDetailScreen extends StatelessWidget {
+  final SleepArticle article;
+
+  const ArticleDetailScreen({super.key, required this.article});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: const AppTopBar(title: 'Read Article'),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              article.category.toUpperCase(),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.primary,
+                fontWeight: FontWeight.bold,
               ),
             ),
+            const SizedBox(height: 12),
+            Text(
+              article.title,
+              style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 12),
+            Text('${article.readingTime} min read'),
+            const Divider(height: 32),
+            Text(
+              article.content,
+              style: const TextStyle(fontSize: 17, height: 1.7),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

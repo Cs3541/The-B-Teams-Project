@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'app_top_bar.dart';
+
 import '../presenters/sleep_journal_presenter.dart';
 
 class SleepJournalScreen extends StatefulWidget {
@@ -59,7 +61,7 @@ class _SleepJournalScreenState extends State<SleepJournalScreen> {
   Widget build(BuildContext context) {
     final entries = _presenter.entries;
     return Scaffold(
-      appBar: AppBar(title: const Text('Sleep Journal')),
+      appBar: const AppTopBar(title: 'Sleep Journal'),
       body: entries.isEmpty
           ? const Center(
               child: Text('No journal entries yet. Tap + to write one.'),
