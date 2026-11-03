@@ -5,7 +5,7 @@ import 'analytics_screen.dart';
 import 'audio_screen.dart';
 import 'articles_screen.dart';
 import 'sleep_data_screen.dart';
-import 'sleep_journal_screen.dart';
+import 'sleepjournal_view.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
@@ -30,7 +30,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     // const AnalyticsListScreen(),
     const AudioListScreen(),
     const SleepDataScreen(),
-    const SleepJournalScreen(),
+    const SleepJournalView(),
     const ArticlesScreen(),
   ];
 
