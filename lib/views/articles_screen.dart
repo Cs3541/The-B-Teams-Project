@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+
 import '../models/articles_model.dart';
 import '../presenters/articles_presenter.dart';
+import '../presenters/saved_articles_presenter.dart';
+import '../views/articles_detail_screen.dart';
 
 class ArticlesScreen extends StatefulWidget {
   const ArticlesScreen({super.key});
@@ -10,187 +13,301 @@ class ArticlesScreen extends StatefulWidget {
 }
 
 class _ArticlesScreenState extends State<ArticlesScreen> {
+
+  // Create the presenters.
   final ArticlesPresenter _presenter = ArticlesPresenter();
 
+  final SavedArticlesPresenter _savedPresenter =
+      SavedArticlesPresenter();
+
+  // Search query.
   String _searchQuery = '';
+
+  // Determines whether to display only saved articles.
+  bool _showSavedOnly = false;
+
+  // Loading state.
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSavedArticles();
+  }
+
+  // Load saved article IDs when the screen starts.
+  Future<void> _loadSavedArticles() async {
+
+    await _savedPresenter.loadSavedArticles();
+
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  // Save or remove an article from bookmarks.
+  Future<void> _toggleBookmark(SleepArticle article) async {
+
+    await _savedPresenter.toggleSavedArticle(article.id);
+
+    if (mounted) {
+      setState(() {});
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            _savedPresenter.isArticleSaved(article.id)
+                ? 'Article saved!'
+                : 'Article removed from saved articles.',
+          ),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
+  // Get the articles that should currently be displayed.
+  List<SleepArticle> get _displayedArticles {
+
+    // Decide whether to display all articles or saved articles.
+    final articles = _showSavedOnly
+        ? _savedPresenter.getSavedArticles(
+            _presenter.articles,
+          )
+        : _presenter.articles;
+
+    // Filter articles using the search query.
+    return articles.where((article) {
+
+      final query = _searchQuery.toLowerCase().trim();
+
+      return article.title.toLowerCase().contains(query) ||
+          article.category.toLowerCase().contains(query) ||
+          article.summary.toLowerCase().contains(query);
+
+    }).toList();
+  }
+
+  // Open the selected article.
+  Future<void> _openArticle(SleepArticle article) async {
+
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ArticleDetailScreen(
+          article: article,
+          savedPresenter: _savedPresenter,
+        ),
+      ),
+    );
+
+    // Refresh the screen when returning from article details.
+    if (mounted) {
+      setState(() {});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final articles = _presenter.searchArticles(_searchQuery);
 
     return Scaffold(
+
       appBar: AppBar(
         title: const Text('Sleep Articles'),
+        centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Improve Your Sleep',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
 
-            const SizedBox(height: 8),
+      body: _isLoading
 
-            const Text(
-              'Discover simple habits for healthier sleep.',
-              style: TextStyle(fontSize: 15),
-            ),
+          // Loading indicator.
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
 
-            const SizedBox(height: 16),
+          : Padding(
+              padding: const EdgeInsets.all(16),
 
-            // Search articles
-            TextField(
-              decoration: InputDecoration(
-                hintText: 'Search articles...',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  _searchQuery = value;
-                });
-              },
-            ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
 
-            const SizedBox(height: 16),
+                  // Screen heading.
+                  const Text(
+                    'Improve Your Sleep',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
 
-            // Display article list
-            Expanded(
-              child: articles.isEmpty
-                  ? const Center(
-                      child: Text('No articles found.'),
-                    )
-                  : ListView.builder(
-                      itemCount: articles.length,
-                      itemBuilder: (context, index) {
-                        final article = articles[index];
+                  const SizedBox(height: 8),
 
-                        return Card(
-                          margin: const EdgeInsets.only(bottom: 12),
-                          child: ListTile(
-                            contentPadding:
-                                const EdgeInsets.all(16),
+                  const Text(
+                    'Discover simple habits for healthier sleep.',
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.grey,
+                    ),
+                  ),
 
-                            leading: const CircleAvatar(
-                              child: Icon(Icons.bedtime),
-                            ),
+                  const SizedBox(height: 20),
 
-                            title: Text(
-                              article.title,
+                  // Search bar.
+                  TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Search articles...',
+                      prefixIcon: const Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+
+                    onChanged: (value) {
+                      setState(() {
+                        _searchQuery = value;
+                      });
+                    },
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  // Article filter dropdown.
+                  DropdownButtonFormField<bool>(
+                    value: _showSavedOnly,
+                    decoration: InputDecoration(
+                      labelText: 'Filter Articles',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+
+                    items: const [
+                      DropdownMenuItem(
+                        value: false,
+                        child: Text('All Articles'),
+                      ),
+                      DropdownMenuItem(
+                        value: true,
+                        child: Text('Saved Articles'),
+                      ),
+                    ],
+
+                    onChanged: (value) {
+                      setState(() {
+                        _showSavedOnly = value ?? false;
+                      });
+                    },
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // Article list.
+                  Expanded(
+                    child: _displayedArticles.isEmpty
+
+                        // Empty state.
+                        ? Center(
+                            child: Text(
+                              _showSavedOnly
+                                  ? 'You have no saved articles yet.'
+                                  : 'No articles found.',
                               style: const TextStyle(
-                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: Colors.grey,
                               ),
+                              textAlign: TextAlign.center,
                             ),
+                          )
 
-                            subtitle: Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 8),
-                              child: Column(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                children: [
-                                  Text(article.category),
+                        // Display available articles.
+                        : ListView.builder(
+                            itemCount: _displayedArticles.length,
 
-                                  const SizedBox(height: 6),
+                            itemBuilder: (context, index) {
 
-                                  Text(article.summary),
+                              final article =
+                                  _displayedArticles[index];
 
-                                  const SizedBox(height: 8),
+                              final isSaved =
+                                  _savedPresenter.isArticleSaved(
+                                article.id,
+                              );
 
-                                  Text(
-                                    '${article.readingTime} min read',
+                              return Card(
+                                margin: const EdgeInsets.only(
+                                  bottom: 12,
+                                ),
+
+                                child: ListTile(
+                                  contentPadding:
+                                      const EdgeInsets.all(12),
+
+                                  // Article title.
+                                  title: Text(
+                                    article.title,
                                     style: const TextStyle(
-                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
 
-                            trailing: const Icon(
-                              Icons.arrow_forward_ios,
-                              size: 16,
-                            ),
+                                  // Article category and reading time.
+                                  subtitle: Padding(
+                                    padding: const EdgeInsets.only(
+                                      top: 8,
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
 
-                            // Open selected article
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      ArticleDetailScreen(
-                                    article: article,
+                                        Text(article.category),
+
+                                        const SizedBox(height: 5),
+
+                                        Text(article.summary),
+
+                                        const SizedBox(height: 5),
+
+                                        Text(
+                                          '${article.readingTime} min read',
+                                          style: const TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
+
+                                  // Bookmark button.
+                                  trailing: IconButton(
+                                    icon: Icon(
+                                      isSaved
+                                          ? Icons.bookmark
+                                          : Icons.bookmark_border,
+                                      color: isSaved
+                                          ? Colors.pink
+                                          : Colors.grey,
+                                    ),
+                                    tooltip: isSaved
+                                        ? 'Remove bookmark'
+                                        : 'Save article',
+                                    onPressed: () =>
+                                        _toggleBookmark(article),
+                                  ),
+
+                                  // Open article details.
+                                  onTap: () => _openArticle(article),
                                 ),
                               );
                             },
                           ),
-                        );
-                      },
-                    ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class ArticleDetailScreen extends StatelessWidget {
-  final SleepArticle article;
-
-  const ArticleDetailScreen({
-    super.key,
-    required this.article,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Read Article'),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              article.category.toUpperCase(),
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.primary,
-                fontWeight: FontWeight.bold,
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 12),
-            Text(
-              article.title,
-              style: const TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text('${article.readingTime} min read'),
-            const Divider(height: 32),
-            Text(
-              article.content,
-              style: const TextStyle(
-                fontSize: 17,
-                height: 1.7,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
