@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 
 import 'app_top_bar.dart';
 import '../models/articles_model.dart';
@@ -124,7 +124,7 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
               'Improve Your Sleep',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-
+        
       body: _isLoading
 
           // Loading indicator.
@@ -158,6 +158,7 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                             leading: const CircleAvatar(
                               child: Icon(Icons.bedtime),
                             ),
+                          );
 
                     onChanged: (value) {
                       setState(() {
@@ -290,16 +291,21 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                             },
                           ),
                         );
-                      },
-                    ),
-            ),
-          ],
-        ),
-      ),
+                                ]
+                              ))))
+                      }
+                  )
+            )
+                ]
+              )
+            )
+          ]
+
+        )
+      )
     );
   }
 }
-
 class ArticleDetailScreen extends StatelessWidget {
   final SleepArticle article;
 
@@ -339,3 +345,4 @@ class ArticleDetailScreen extends StatelessWidget {
     );
   }
 }
+*/

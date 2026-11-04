@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../home_screen.dart';
+import 'analytics_screen.dart';
 import 'audio_screen.dart';
 import 'articles_screen.dart';
 import 'sleep_data_screen.dart';
@@ -26,11 +27,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   final List<Widget> _screens = <Widget>[
     const HomeScreen(),
-    // const AnalyticsListScreen(),
+    const AnalyticsListScreen(),
     const AudioListScreen(),
     const SleepDataScreen(),
     const SleepJournalView(),
-    const ArticlesScreen(),
+    //const ArticlesScreen(),
   ];
 
   void _onItemTapped(int index) {

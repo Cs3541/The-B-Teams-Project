@@ -18,12 +18,7 @@ class _AnalyticsListScreenState extends State<AnalyticsListScreen> {
   final AnalyticsPresenter _presenter = AnalyticsPresenter();
   final SleepLogPresenter _sleepLogPresenter = SleepLogPresenter();
   List<SleepLog> _logs = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _loadLogs();
-  }
+    bool _isLoading = true;
 
   Future<void> _loadLogs() async {
     try {
@@ -33,10 +28,12 @@ class _AnalyticsListScreenState extends State<AnalyticsListScreen> {
 
       setState(() {
         _logs = logs;
+        _isLoading = false;
       });
     } catch (error) {
       if (!mounted) return;
-
+      
+      setState(() => _isLoading = false);
       _showMessage(error.toString());
     }
   }
@@ -45,9 +42,9 @@ class _AnalyticsListScreenState extends State<AnalyticsListScreen> {
         .showSnackBar(SnackBar(content: Text(message)));
   }
 
-
   @override
   Widget build(BuildContext context) {
+    _loadLogs();
     return Scaffold(
       appBar: const AppTopBar(
         title: 'Analytics Tab',
@@ -59,7 +56,17 @@ class _AnalyticsListScreenState extends State<AnalyticsListScreen> {
         centerTitle: true,
         backgroundColor: Colors.deepPurple,
       ),
-      body: Center(
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _logs.isEmpty
+              ? const Center(
+                  child: Text(
+                    'No sleep logs available.',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                )
+              
+      :Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
