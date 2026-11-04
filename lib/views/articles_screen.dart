@@ -4,7 +4,7 @@ import 'app_top_bar.dart';
 import '../models/articles_model.dart';
 import '../presenters/articles_presenter.dart';
 import '../presenters/saved_articles_presenter.dart';
-import '../views/articles_detail_screen.dart';
+import 'articles_detail_screen.dart';
 
 class ArticlesScreen extends StatefulWidget {
   const ArticlesScreen({super.key});
@@ -15,7 +15,7 @@ class ArticlesScreen extends StatefulWidget {
 
 class _ArticlesScreenState extends State<ArticlesScreen> {
 
-  // Create the presenters.
+  // Create presenters.
   final ArticlesPresenter _presenter = ArticlesPresenter();
 
   final SavedArticlesPresenter _savedPresenter =
@@ -36,9 +36,8 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
     _loadSavedArticles();
   }
 
-  // Load saved article IDs when the screen starts.
+  // Load saved article IDs.
   Future<void> _loadSavedArticles() async {
-
     await _savedPresenter.loadSavedArticles();
 
     if (mounted) {
@@ -48,9 +47,8 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
     }
   }
 
-  // Save or remove an article from bookmarks.
+  // Toggle article bookmark.
   Future<void> _toggleBookmark(SleepArticle article) async {
-
     await _savedPresenter.toggleSavedArticle(article.id);
 
     if (mounted) {
@@ -63,37 +61,29 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                 ? 'Article saved!'
                 : 'Article removed from saved articles.',
           ),
-          duration: const Duration(seconds: 2),
         ),
       );
     }
   }
 
-  // Get the articles that should currently be displayed.
+  // Get articles based on selected filter and search.
   List<SleepArticle> get _displayedArticles {
 
-    // Decide whether to display all articles or saved articles.
     final articles = _showSavedOnly
-        ? _savedPresenter.getSavedArticles(
-            _presenter.articles,
-          )
+        ? _savedPresenter.getSavedArticles(_presenter.articles)
         : _presenter.articles;
 
-    // Filter articles using the search query.
     return articles.where((article) {
-
       final query = _searchQuery.toLowerCase().trim();
 
       return article.title.toLowerCase().contains(query) ||
           article.category.toLowerCase().contains(query) ||
           article.summary.toLowerCase().contains(query);
-
     }).toList();
   }
 
-  // Open the selected article.
+  // Open article details.
   Future<void> _openArticle(SleepArticle article) async {
-
     await Navigator.push(
       context,
       MaterialPageRoute(
@@ -104,7 +94,6 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
       ),
     );
 
-    // Refresh the screen when returning from article details.
     if (mounted) {
       setState(() {});
     }
@@ -112,7 +101,6 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: const AppTopBar(title: 'Sleep Articles'),
       body: Padding(
@@ -126,40 +114,47 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
             ),
         
       body: _isLoading
-
-          // Loading indicator.
           ? const Center(
               child: CircularProgressIndicator(),
             )
-
           : Padding(
               padding: const EdgeInsets.all(16),
-
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
 
-            const SizedBox(height: 16),
+                  const Text(
+                    'Improve Your Sleep',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
 
-            // Display article list
-            Expanded(
-              child: articles.isEmpty
-                  ? const Center(child: Text('No articles found.'))
-                  : ListView.builder(
-                      itemCount: articles.length,
-                      itemBuilder: (context, index) {
-                        final article = articles[index];
+                  const SizedBox(height: 8),
 
-                        return Card(
-                          margin: const EdgeInsets.only(bottom: 12),
-                          child: ListTile(
-                            contentPadding: const EdgeInsets.all(16),
+                  const Text(
+                    'Discover simple habits for healthier sleep.',
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.grey,
+                    ),
+                  ),
 
                             leading: const CircleAvatar(
                               child: Icon(Icons.bedtime),
                             ),
                           );
 
+                  // Search bar.
+                  TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Search articles...',
+                      prefixIcon: const Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
                     onChanged: (value) {
                       setState(() {
                         _searchQuery = value;
@@ -169,7 +164,7 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
 
                   const SizedBox(height: 12),
 
-                  // Article filter dropdown.
+                  // All articles / saved articles filter.
                   DropdownButtonFormField<bool>(
                     value: _showSavedOnly,
                     decoration: InputDecoration(
@@ -178,7 +173,6 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-
                     items: const [
                       DropdownMenuItem(
                         value: false,
@@ -189,7 +183,6 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                         child: Text('Saved Articles'),
                       ),
                     ],
-
                     onChanged: (value) {
                       setState(() {
                         _showSavedOnly = value ?? false;
@@ -202,32 +195,21 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                   // Article list.
                   Expanded(
                     child: _displayedArticles.isEmpty
-
-                        // Empty state.
                         ? Center(
                             child: Text(
                               _showSavedOnly
                                   ? 'You have no saved articles yet.'
                                   : 'No articles found.',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.grey,
-                              ),
                               textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: Colors.grey,
+                                fontSize: 16,
+                              ),
                             ),
                           )
-
-                        // Display available articles.
                         : ListView.builder(
                             itemCount: _displayedArticles.length,
-
-                            subtitle: Padding(
-                              padding: const EdgeInsets.only(top: 8),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(article.category),
-
+                            itemBuilder: (context, index) {
                               final article =
                                   _displayedArticles[index];
 
@@ -240,17 +222,21 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                                 margin: const EdgeInsets.only(
                                   bottom: 12,
                                 ),
-
                                 child: ListTile(
                                   contentPadding:
                                       const EdgeInsets.all(12),
 
-                                  Text(
-                                    '${article.readingTime} min read',
-                                    style: const TextStyle(fontSize: 12),
+                                  leading: const CircleAvatar(
+                                    child: Icon(Icons.bedtime),
                                   ),
 
-                                  // Article category and reading time.
+                                  title: Text(
+                                    article.title,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+
                                   subtitle: Padding(
                                     padding: const EdgeInsets.only(
                                       top: 8,
@@ -259,7 +245,6 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-
                                         Text(article.category),
 
                                         const SizedBox(height: 5),
@@ -279,13 +264,22 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                                     ),
                                   ),
 
-                            // Open selected article
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      ArticleDetailScreen(article: article),
+                                  // Bookmark button.
+                                  trailing: IconButton(
+                                    icon: Icon(
+                                      isSaved
+                                          ? Icons.bookmark
+                                          : Icons.bookmark_border,
+                                      color: isSaved
+                                          ? Colors.pink
+                                          : Colors.grey,
+                                    ),
+                                    onPressed: () =>
+                                        _toggleBookmark(article),
+                                  ),
+
+                                  // Open article.
+                                  onTap: () => _openArticle(article),
                                 ),
                               );
                             },
@@ -327,21 +321,6 @@ class ArticleDetailScreen extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 12),
-            Text(
-              article.title,
-              style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
-            Text('${article.readingTime} min read'),
-            const Divider(height: 32),
-            Text(
-              article.content,
-              style: const TextStyle(fontSize: 17, height: 1.7),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
