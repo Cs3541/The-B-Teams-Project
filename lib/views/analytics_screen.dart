@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'app_top_bar.dart';
 import '../presenters/analytics_presenter.dart';
+import '../models/sleep_log_model.dart';
+import '../presenters/sleep_log_presenter.dart';
+
+
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class AnalyticsListScreen extends StatefulWidget {
   const AnalyticsListScreen({super.key});
@@ -10,66 +16,83 @@ class AnalyticsListScreen extends StatefulWidget {
 
 class _AnalyticsListScreenState extends State<AnalyticsListScreen> {
   final AnalyticsPresenter _presenter = AnalyticsPresenter();
+  final SleepLogPresenter _sleepLogPresenter = SleepLogPresenter();
+  List<SleepLog> _logs = [];
+    bool _isLoading = true;
 
-  void _showAddAnalyticsDialog() {
-    List<String> newSleepData = [];
+  Future<void> _loadLogs() async {
+    try {
+      final logs = await _sleepLogPresenter.loadLogs();
 
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Add Sleep Data'),
-          content: TextField(
-            autofocus: true,
-            decoration: const InputDecoration(hintText: 'Enter sleep data'),
-            onChanged: (value) {
-                  newSleepData.add(value);
-                },
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context), //Cancel button
-                    child: const Text('Cancel'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    if (newSleepData.isNotEmpty) {
-                      setState(() {
-                        _presenter.addAnalytics(newSleepData);
-                      });
-                    }
-                    Navigator.pop(context); //Close dialong
-                  },
-                  child: const Text('Add'),
-                ),
-              ],
-        );
-      },
-    );
+      if (!mounted) return;
+
+      setState(() {
+        _logs = logs;
+        _isLoading = false;
+      });
+    } catch (error) {
+      if (!mounted) return;
+      
+      setState(() => _isLoading = false);
+      _showMessage(error.toString());
+    }
   }
-
+    void _showMessage(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
 
   @override
   Widget build(BuildContext context) {
-    final analytics = _presenter.analytics;
-
+    _loadLogs();
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Analytics Tab'),
+      appBar: const AppTopBar(
+        title: 'Analytics Tab',
+        titleStyle: TextStyle(
+          fontSize: 24,
+          color: Colors.white60,
+          fontWeight: FontWeight.bold,
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.deepPurple,
       ),
-      body: ListView.builder(
-        itemCount: analytics.length,
-        itemBuilder: (context, index) {
-          final analytic = analytics[index];
-          return Text(analytic.sleep.join(', '));
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _showAddAnalyticsDialog,
-        child: const Icon(Icons.add),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _logs.isEmpty
+              ? const Center(
+                  child: Text(
+                    'No sleep logs available.',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                )
+              
+      :Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Average Amount of Sleep: ${_presenter.getAverageSleep(_logs)} hours',
+              style: TextStyle(
+                fontSize: 24,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SfCartesianChart(
+              series: <CartesianSeries<SleepLog, int>>[
+                ColumnSeries<SleepLog, int>(
+                  dataSource: _logs,
+
+                  xValueMapper: (SleepLog data, int index) => index,
+                  yValueMapper: (SleepLog data, _) => data.duration.inMinutes / 60, // Convert to hours
+
+                  width: .98,
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
-      
-    
   }
 }
