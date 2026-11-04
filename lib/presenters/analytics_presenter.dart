@@ -7,7 +7,7 @@ class AnalyticsPresenter {
   
     for (int i = 0; i < data.length; i++){
       SleepLog temp = data.elementAt(i);
-      totalSleep += temp.duration.inHours;
+      totalSleep += temp.duration.inMinutes / 60; // Convert duration to hours
     }
     double avgSleep = totalSleep/data.length;
     return double.parse((avgSleep).toStringAsFixed(2));
