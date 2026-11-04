@@ -84,7 +84,7 @@ class _AnalyticsListScreenState extends State<AnalyticsListScreen> {
                   dataSource: _logs,
 
                   xValueMapper: (SleepLog data, int index) => index,
-                  yValueMapper: (SleepLog data, _) => data.duration.inHours,
+                  yValueMapper: (SleepLog data, _) => data.duration.inMinutes / 60, // Convert to hours
 
                   width: .98,
                 ),
