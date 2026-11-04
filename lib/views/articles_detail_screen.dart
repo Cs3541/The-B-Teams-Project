@@ -141,7 +141,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
               padding: const EdgeInsets.all(16),
 
               decoration: BoxDecoration(
-                color: Colors.pink.withOpacity(0.08),
+                color: Colors.pink.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(12),
               ),
 

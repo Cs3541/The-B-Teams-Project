@@ -31,7 +31,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     const AudioListScreen(),
     const SleepDataScreen(),
     const SleepJournalView(),
-    const ArticlesScreen(),
+    //const ArticlesScreen(),
   ];
 
   void _onItemTapped(int index) {

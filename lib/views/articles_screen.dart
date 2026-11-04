@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
+
 import 'app_top_bar.dart';
 import '../models/articles_model.dart';
 import '../presenters/articles_presenter.dart';
@@ -21,10 +22,10 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
       SavedArticlesPresenter();
 
   // Search query.
-  String _searchQuery = '';
+  final String _searchQuery = '';
 
-  // Saved articles filter.
-  bool _showSavedOnly = false;
+  // Determines whether to display only saved articles.
+  final bool _showSavedOnly = false;
 
   // Loading state.
   bool _isLoading = true;
@@ -102,7 +103,16 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const AppTopBar(title: 'Sleep Articles'),
-
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Improve Your Sleep',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+        
       body: _isLoading
           ? const Center(
               child: CircularProgressIndicator(),
@@ -131,7 +141,10 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                     ),
                   ),
 
-                  const SizedBox(height: 20),
+                            leading: const CircleAvatar(
+                              child: Icon(Icons.bedtime),
+                            ),
+                          );
 
                   // Search bar.
                   TextField(
@@ -271,10 +284,44 @@ class _ArticlesScreenState extends State<ArticlesScreen> {
                               );
                             },
                           ),
-                  ),
-                ],
+                        );
+                                ]
+                              ))))
+                      }
+                  )
+            )
+                ]
+              )
+            )
+          ]
+
+        )
+      )
+    );
+  }
+}
+class ArticleDetailScreen extends StatelessWidget {
+  final SleepArticle article;
+
+  const ArticleDetailScreen({super.key, required this.article});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: const AppTopBar(title: 'Read Article'),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              article.category.toUpperCase(),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.primary,
+                fontWeight: FontWeight.bold,
               ),
             ),
     );
   }
 }
+*/
