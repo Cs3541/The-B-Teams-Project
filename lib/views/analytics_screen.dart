@@ -16,7 +16,35 @@ class AnalyticsListScreen extends StatefulWidget {
 
 class _AnalyticsListScreenState extends State<AnalyticsListScreen> {
   final AnalyticsPresenter _presenter = AnalyticsPresenter();
-  final List<SleepLog> sleepLogs = SleepLogPresenter().getSleepLogs();
+  final SleepLogPresenter _sleepLogPresenter = SleepLogPresenter();
+  List<SleepLog> _logs = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLogs();
+  }
+
+  Future<void> _loadLogs() async {
+    try {
+      final logs = await _sleepLogPresenter.loadLogs();
+
+      if (!mounted) return;
+
+      setState(() {
+        _logs = logs;
+      });
+    } catch (error) {
+      if (!mounted) return;
+
+      _showMessage(error.toString());
+    }
+  }
+    void _showMessage(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +64,7 @@ class _AnalyticsListScreenState extends State<AnalyticsListScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Average Amount of Sleep: ${_presenter.getAverageSleep(sleepLogs)} hours',
+              'Average Amount of Sleep: ${_presenter.getAverageSleep(_logs)} hours',
               style: TextStyle(
                 fontSize: 24,
                 color: Colors.black,
@@ -46,7 +74,7 @@ class _AnalyticsListScreenState extends State<AnalyticsListScreen> {
             SfCartesianChart(
               series: <CartesianSeries<SleepLog, int>>[
                 ColumnSeries<SleepLog, int>(
-                  dataSource: sleepLogs,
+                  dataSource: _logs,
 
                   xValueMapper: (SleepLog data, int index) => index,
                   yValueMapper: (SleepLog data, _) => data.duration.inHours,
