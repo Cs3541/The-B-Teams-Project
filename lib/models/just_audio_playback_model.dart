@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:audio_session/audio_session.dart';
 import 'package:just_audio/just_audio.dart';
 
-import '../models/audio_model.dart';
-import '../models/audio_playback_state.dart';
-import 'audio_playback_service.dart';
+import 'audio_model.dart';
+import 'audio_playback_state.dart';
+import 'audio_playback_model.dart';
 
-class JustAudioPlaybackService implements AudioPlaybackService {
+class JustAudioPlaybackModel implements AudioPlaybackModel {
   final _states = StreamController<AudioPlaybackState>.broadcast();
   final List<StreamSubscription<dynamic>> _subscriptions = [];
   AudioPlayer? _player;

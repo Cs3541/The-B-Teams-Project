@@ -1,7 +1,7 @@
-import '../models/audio_model.dart';
-import '../models/audio_playback_state.dart';
+import 'audio_model.dart';
+import 'audio_playback_state.dart';
 
-abstract class AudioPlaybackService {
+abstract class AudioPlaybackModel {
   Stream<AudioPlaybackState> get states;
 
   Future<void> load(Audio audio);

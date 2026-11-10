@@ -4,12 +4,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:the_b_teams_project/models/audio_model.dart';
 import 'package:the_b_teams_project/models/audio_playback_state.dart';
 import 'package:the_b_teams_project/presenters/audio_presenter.dart';
-import 'package:the_b_teams_project/services/audio_playback_service.dart';
-import 'package:the_b_teams_project/services/just_audio_playback_service.dart';
+import 'package:the_b_teams_project/models/audio_playback_model.dart';
+import 'package:the_b_teams_project/models/just_audio_playback_model.dart';
 
 void main() {
   test('Metadata entries remain valid without a playable source', () {
-    final playback = FakeAudioPlaybackService();
+    final playback = FakeAudioPlaybackModel();
     final presenter = AudioPresenter(playback: playback);
     addTearDown(presenter.dispose);
 
@@ -24,7 +24,7 @@ void main() {
   });
 
   test('An entry without a source is rejected before loading', () async {
-    final playback = FakeAudioPlaybackService();
+    final playback = FakeAudioPlaybackModel();
     final presenter = AudioPresenter(playback: playback);
     addTearDown(presenter.dispose);
 
@@ -39,7 +39,7 @@ void main() {
   });
 
   test('Preparing a source forwards playback state to the presenter', () async {
-    final playback = FakeAudioPlaybackService();
+    final playback = FakeAudioPlaybackModel();
     final presenter = AudioPresenter(playback: playback);
     addTearDown(presenter.dispose);
     final audio = Audio(
@@ -67,7 +67,7 @@ void main() {
   });
 
   test('A failed load does not select an unplayable entry', () async {
-    final playback = FakeAudioPlaybackService()..failLoad = true;
+    final playback = FakeAudioPlaybackModel()..failLoad = true;
     final presenter = AudioPresenter(playback: playback);
     addTearDown(presenter.dispose);
 
@@ -86,8 +86,8 @@ void main() {
     expect(presenter.playbackState.status, AudioPlaybackStatus.error);
   });
 
-  test('Presenter disposal releases its playback service', () async {
-    final playback = FakeAudioPlaybackService();
+  test('Presenter disposal releases its playback model', () async {
+    final playback = FakeAudioPlaybackModel();
     final presenter = AudioPresenter(playback: playback);
 
     presenter.dispose();
@@ -101,7 +101,7 @@ void main() {
   });
 
   test('Native adapter validates input without starting a player', () async {
-    final playback = JustAudioPlaybackService();
+    final playback = JustAudioPlaybackModel();
 
     await expectLater(playback.load(Audio(name: 'Rain')), throwsArgumentError);
     for (final volume in [-0.1, 1.1, double.nan, double.infinity]) {
@@ -113,7 +113,7 @@ void main() {
   });
 }
 
-class FakeAudioPlaybackService implements AudioPlaybackService {
+class FakeAudioPlaybackModel implements AudioPlaybackModel {
   final controller = StreamController<AudioPlaybackState>.broadcast();
   Audio? loadedAudio;
   bool failLoad = false;

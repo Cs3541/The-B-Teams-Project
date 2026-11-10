@@ -4,19 +4,19 @@ import 'package:flutter/foundation.dart';
 
 import '../models/audio_model.dart';
 import '../models/audio_playback_state.dart';
-import '../services/audio_playback_service.dart';
-import '../services/just_audio_playback_service.dart';
+import '../models/audio_playback_model.dart';
+import '../models/just_audio_playback_model.dart';
 
 class AudioPresenter extends ChangeNotifier {
-  final AudioPlaybackService _playback;
+  final AudioPlaybackModel _playback;
   StreamSubscription<AudioPlaybackState>? _subscription;
   AudioPlaybackState _playbackState = const AudioPlaybackState();
   Audio? _selectedAudio;
   bool _disposed = false;
   final List<Audio> _audios = [];
 
-  AudioPresenter({AudioPlaybackService? playback})
-      : _playback = playback ?? JustAudioPlaybackService();
+  AudioPresenter({AudioPlaybackModel? playback})
+      : _playback = playback ?? JustAudioPlaybackModel();
 
   List<Audio> get audios => List.unmodifiable(_audios);
   AudioPlaybackState get playbackState => _playbackState;
