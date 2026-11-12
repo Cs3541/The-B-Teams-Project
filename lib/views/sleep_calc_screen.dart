@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'app_top_bar.dart';
+import '../presenters/sleep_calc_presenter.dart';
 
 
 class SleepCalcScreen extends StatefulWidget {
@@ -10,10 +11,12 @@ class SleepCalcScreen extends StatefulWidget {
 }
 
 class _SleepCalcScreenState extends State<SleepCalcScreen> {
+  final SleepCalcPresenter _presenter = SleepCalcPresenter();
 
-
+  int _age = -1;
   bool _yearOrMonth = true;
   bool _sleepOrWakeUp = true;
+  double _wakeOrSleepTime = 0.0;
   bool _isAMorPM = false;
 
     String _stringBasedOnSleepOrWakeUp() {
@@ -50,13 +53,18 @@ class _SleepCalcScreenState extends State<SleepCalcScreen> {
                 width: 180,
                   child:
                   TextField(
-                      decoration: InputDecoration(
-                        hintText: "Enter age",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+                    decoration: InputDecoration(
+                      hintText: 'Enter age',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
+                    ),
                     style: TextStyle(fontSize: 16),
+                    onChanged: (value) {
+                      setState(() {
+                        _age = int.tryParse(value) ?? -1;
+                      });
+                    },
                   ),
                 ),
                 SizedBox(
@@ -112,13 +120,19 @@ class _SleepCalcScreenState extends State<SleepCalcScreen> {
                 width: 180,
                   child:
                   TextField(
-                      decoration: InputDecoration(
-                        hintText: _stringBasedOnSleepOrWakeUp(),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+                    decoration: InputDecoration(
+                      hintText: _stringBasedOnSleepOrWakeUp(),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
+                    ),
                     style: TextStyle(fontSize: 16),
+                    onChanged: (value) {
+                      setState(() {
+                        _wakeOrSleepTime = double.tryParse(value) ?? 0.0;
+                      });
+                    },
+
                   ),
                 ),
                 SizedBox(
@@ -152,7 +166,7 @@ class _SleepCalcScreenState extends State<SleepCalcScreen> {
             const SizedBox(height: 24),
             ElevatedButton.icon(
               onPressed: () {
-                // Navigate to the sleep calculator functionality
+                _presenter.calculateSleepDuration(_age, _yearOrMonth, _sleepOrWakeUp, _wakeOrSleepTime, _isAMorPM);
               },
               icon: const Icon(Icons.calculate),
               label: const Text('Calculate Sleep'),
