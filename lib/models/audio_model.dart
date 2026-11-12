@@ -6,7 +6,7 @@ class Audio {
   final String? source;
   final AudioSourceType? sourceType;
 
-  Audio({
+  const Audio({
     required this.name,
     this.description,
     this.source,
