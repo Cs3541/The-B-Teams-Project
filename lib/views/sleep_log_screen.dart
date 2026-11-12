@@ -17,6 +17,8 @@ class _SleepLogScreenState extends State<SleepLogScreen> {
 
   TimeOfDay? _bedtime;
   TimeOfDay? _wakeUpTime;
+  int? _sleepQuality;
+  int? _restedRating;
 
   List<SleepLog> _logs = [];
   bool _loading = true;
@@ -97,7 +99,8 @@ class _SleepLogScreenState extends State<SleepLogScreen> {
     final wakeUp = _formatWakeUp(_wakeUpTime!, bedtime);
     final duration = wakeUp.difference(bedtime);
 
-    if (duration <= Duration.zero || duration > const Duration(hours: 24)) {
+    if (duration <= Duration.zero ||
+        duration > const Duration(hours: 24)) {
       return null;
     }
 
@@ -121,9 +124,51 @@ class _SleepLogScreenState extends State<SleepLogScreen> {
     return '$date at $time';
   }
 
+  Widget _buildRatingSelector({
+    required String title,
+    required String description,
+    required int? selectedRating,
+    required ValueChanged<int> onSelected,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        const SizedBox(height: 4),
+        Text(
+          description,
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
+        const SizedBox(height: 10),
+        Wrap(
+          spacing: 8,
+          children: List.generate(5, (index) {
+            final rating = index + 1;
+
+            return ChoiceChip(
+              label: Text('$rating'),
+              selected: selectedRating == rating,
+              onSelected: (_) => onSelected(rating),
+            );
+          }),
+        ),
+      ],
+    );
+  }
+
   Future<void> _saveLog() async {
     if (_bedtime == null || _wakeUpTime == null) {
       _showMessage('Please select both bedtime and wake-up time.');
+      return;
+    }
+
+    if (_sleepQuality == null || _restedRating == null) {
+      _showMessage(
+        'Please rate your sleep quality and how rested you feel.',
+      );
       return;
     }
 
@@ -131,8 +176,11 @@ class _SleepLogScreenState extends State<SleepLogScreen> {
     final wakeUp = _formatWakeUp(_wakeUpTime!, bedtime);
     final duration = wakeUp.difference(bedtime);
 
-    if (duration <= Duration.zero || duration > const Duration(hours: 24)) {
-      _showMessage('Please choose a valid sleep period of 24 hours or less.');
+    if (duration <= Duration.zero ||
+        duration > const Duration(hours: 24)) {
+      _showMessage(
+        'Please choose a valid sleep period of 24 hours or less.',
+      );
       return;
     }
 
@@ -142,6 +190,8 @@ class _SleepLogScreenState extends State<SleepLogScreen> {
       id: DateTime.now().microsecondsSinceEpoch.toString(),
       bedtime: bedtime,
       wakeUpTime: wakeUp,
+      sleepQuality: _sleepQuality,
+      restedRating: _restedRating,
     );
 
     try {
@@ -157,6 +207,8 @@ class _SleepLogScreenState extends State<SleepLogScreen> {
         _logs = updatedLogs;
         _bedtime = null;
         _wakeUpTime = null;
+        _sleepQuality = null;
+        _restedRating = null;
         _saving = false;
       });
 
@@ -187,8 +239,9 @@ class _SleepLogScreenState extends State<SleepLogScreen> {
   }
 
   void _showMessage(String message) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
   }
 
   @override
@@ -260,7 +313,26 @@ class _SleepLogScreenState extends State<SleepLogScreen> {
                             ],
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 20),
+                        _buildRatingSelector(
+                          title: 'Sleep quality',
+                          description: '1 = Very poor    5 = Excellent',
+                          selectedRating: _sleepQuality,
+                          onSelected: (rating) {
+                            setState(() => _sleepQuality = rating);
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        _buildRatingSelector(
+                          title: 'How rested did you feel?',
+                          description:
+                              '1 = Not rested    5 = Very well rested',
+                          selectedRating: _restedRating,
+                          onSelected: (rating) {
+                            setState(() => _restedRating = rating);
+                          },
+                        ),
+                        const SizedBox(height: 20),
                         SizedBox(
                           width: double.infinity,
                           child: FilledButton.icon(
@@ -286,7 +358,9 @@ class _SleepLogScreenState extends State<SleepLogScreen> {
                     child: Padding(
                       padding: EdgeInsets.all(20),
                       child: Center(
-                        child: Text('No sleep logs yet. Add your first one!'),
+                        child: Text(
+                          'No sleep logs yet. Add your first one!',
+                        ),
                       ),
                     ),
                   )
@@ -294,11 +368,17 @@ class _SleepLogScreenState extends State<SleepLogScreen> {
                   ..._logs.map(
                     (log) => Card(
                       child: ListTile(
-                        leading: const CircleAvatar(child: Icon(Icons.bedtime)),
+                        leading: const CircleAvatar(
+                          child: Icon(Icons.bedtime),
+                        ),
                         title: Text(log.formattedDuration),
                         subtitle: Text(
                           'Bed: ${_formatDateTime(log.bedtime)}\n'
-                          'Wake: ${_formatDateTime(log.wakeUpTime)}',
+                          'Wake: ${_formatDateTime(log.wakeUpTime)}\n'
+                          'Sleep quality: '
+                          '${log.sleepQuality ?? 'Not rated'}/5\n'
+                          'How rested: '
+                          '${log.restedRating ?? 'Not rated'}/5',
                         ),
                         isThreeLine: true,
                         trailing: IconButton(
