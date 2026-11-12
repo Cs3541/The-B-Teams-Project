@@ -69,6 +69,7 @@ class JustAudioPlaybackModel implements AudioPlaybackModel {
     await player.stop();
     final session = await AudioSession.instance;
     await session.configure(const AudioSessionConfiguration.music());
+    await player.setLoopMode(LoopMode.one);
     switch (audio.sourceType!) {
       case AudioSourceType.asset:
         await player.setAsset(audio.source!);
