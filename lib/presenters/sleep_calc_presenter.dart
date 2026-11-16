@@ -2,50 +2,55 @@ import 'package:flutter/material.dart';
 
 class SleepCalcPresenter {
 
-  double calculateSleepDuration(int age, bool isYear, bool isWakeUpOrBedtime, double wakeOrSleepTime, bool isAMOrPM) {
+  double calculateSleepDuration(int age, bool isYear, bool isWakeUpOrBedtime, double hours, double minutes, bool isAM) {
 
     double wakeUpOrBedTime = 0;
     // Calculate sleep duration based on age
     double sleepDuration = findSleepDuration(age, isYear);
 
     // The AM section
-    // Wake up time calculation
-    if (!isAMOrPM && isWakeUpOrBedtime) {
-      wakeUpOrBedTime = wakeOrSleepTime - sleepDuration;
-      if (wakeUpOrBedTime < 0) {
-        wakeUpOrBedTime += 24; // Adjust for negative time
+    if (isAM) {
+      // Wake up time calculation
+      if (isWakeUpOrBedtime) { //This one works
+      wakeUpOrBedTime = hours - sleepDuration;
+        if (wakeUpOrBedTime < 0) {
+          wakeUpOrBedTime += 24; // Adjust for negative time
+        }
       }
-    }
-    // bedtime time calculation
-    if (!isAMOrPM && !isWakeUpOrBedtime) {
-      wakeUpOrBedTime = wakeOrSleepTime + sleepDuration;
+      // bedtime calculation
+      else if (!isWakeUpOrBedtime) { //This one works
+        wakeUpOrBedTime = hours + sleepDuration;
+      }
     }
     // The PM section
     // Wake up time calculation
-    if (isAMOrPM && isWakeUpOrBedtime) {
-      wakeUpOrBedTime = wakeOrSleepTime + sleepDuration + 12;
-      if (wakeUpOrBedTime < 0) {
-        wakeUpOrBedTime += 24; // Adjust for negative time
+    if (!isAM) { //This one works
+      if (isWakeUpOrBedtime) {
+      wakeUpOrBedTime = hours - sleepDuration + 12;
+        if (wakeUpOrBedTime < 0) {
+          wakeUpOrBedTime += 12; // Adjust for negative time
+        }
+      }
+      // bedtime calculation
+      else if (!isWakeUpOrBedtime) {//This one works
+        wakeUpOrBedTime = hours + sleepDuration + 12;
+          if (wakeUpOrBedTime > 24) {
+          wakeUpOrBedTime -= 24; // Adjust for time exceeding 24 hours
+        }
       }
 
     }
-    // bedtime time calculation
-    if (isAMOrPM && !isWakeUpOrBedtime) {
-      wakeUpOrBedTime = wakeOrSleepTime - sleepDuration;
-    }
-
-
 
     return wakeUpOrBedTime;
   }
 
   double findSleepDuration(int age, bool isYear) {
     int ageInMonths;
-    
+
     if (isYear) {
-      ageInMonths = age;
-    } else {
       ageInMonths = age * 12;
+    } else {
+      ageInMonths = age;
     }
     
     double sleepDuration;

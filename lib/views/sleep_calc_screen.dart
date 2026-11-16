@@ -16,24 +16,76 @@ class _SleepCalcScreenState extends State<SleepCalcScreen> {
   int _age = -1;
   bool _yearOrMonth = true;
   bool _sleepOrWakeUp = true;
-  double _wakeOrSleepTime = 0.0;
-  bool _isAMorPM = false;
+  double _hours = 0;
+  double _minutes = 0;
+  bool _isAM = true;
 
-    String _stringBasedOnSleepOrWakeUp() {
+  String resultTextString() {
     String infoText = '';
-    if (_sleepOrWakeUp == true) {
-      setState(() {
-        infoText = "Enter bedtime";
-      });
-    } else {
-      setState(() {
-        infoText = "Enter wake up time";
-      });
+    double calculatedTime = _presenter.calculateSleepDuration(_age, _yearOrMonth, _sleepOrWakeUp, _hours, _minutes, _isAM);
+    // The AM section
+    if (_isAM){
+      // Wake up time calculation
+      if (!_sleepOrWakeUp){
+      infoText = 'Calculated Wake Up Time1: ';
+      }
+      // bedtime calculation
+      else if (_sleepOrWakeUp){
+        infoText = 'Calculated Bedtime2: ';
+      }
     }
+    // The PM section
+    if (!_isAM){
+      // Wake up time calculation
+      if (!_sleepOrWakeUp){
+        infoText = 'Calculated Wake Up Time3: ';
+      }
+      // bedtime calculation
+      else if (_sleepOrWakeUp){
+        infoText = 'Calculated Bedtime4: ';
+      }
+    }
+
+    if (calculatedTime >= 12) {
+      infoText += '${calculatedTime - 12} PM';
+    } else {
+      infoText += '$calculatedTime AM';
+    }
+
     return infoText;
   }
 
-
+  Future<void> _showCalcDialog() async {
+    final formKey = GlobalKey<FormState>();
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Sleep Calculation Result'),
+        content: SingleChildScrollView(
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  resultTextString(),
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Ok'),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,16 +122,16 @@ class _SleepCalcScreenState extends State<SleepCalcScreen> {
                 SizedBox(
                 width: 113, // Set your desired width here
                 child: DropdownButtonFormField<bool>(
-                    initialValue: _yearOrMonth==false,
+                    initialValue: _yearOrMonth==true,
                     items: const [
                       DropdownMenuItem(
                         value: true,
-                        child: Text('Months Old'),
+                        child: Text('Years Old'),
                       ),
 
                       DropdownMenuItem(
                         value: false,
-                        child: Text('Years Old'),
+                        child: Text('Months Old'),
                       ),
                     ],
                     onChanged: (value) {
@@ -92,18 +144,18 @@ class _SleepCalcScreenState extends State<SleepCalcScreen> {
               ],
             ),
             SizedBox(
-              width: 160, // Set your desired width here
+              width: 200, // Set your desired width here
                 child: DropdownButtonFormField<bool>(
-                  initialValue: _sleepOrWakeUp==false,
+                  initialValue: _sleepOrWakeUp==true,
                   items: const [
                     DropdownMenuItem(
                       value: true,
-                      child: Text('Time to go to bed'),
+                      child: Text('Enter Time to wake up'),
                     ),
 
                     DropdownMenuItem(
                       value: false,
-                      child: Text('Time to wake up'),
+                      child: Text('Enter Time to go to bed'),
                     ),
                   ],
                 onChanged: (value) {
@@ -117,11 +169,11 @@ class _SleepCalcScreenState extends State<SleepCalcScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
-                width: 180,
+                width: 60,
                   child:
                   TextField(
                     decoration: InputDecoration(
-                      hintText: _stringBasedOnSleepOrWakeUp(),
+                      hintText: '00',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -129,16 +181,39 @@ class _SleepCalcScreenState extends State<SleepCalcScreen> {
                     style: TextStyle(fontSize: 16),
                     onChanged: (value) {
                       setState(() {
-                        _wakeOrSleepTime = double.tryParse(value) ?? 0.0;
+                        _hours = double.tryParse(value) ?? 0.0;
+                      });
+                    },
+
+                  ),
+                ),
+                Text(
+                  ':',
+                  style: TextStyle(fontSize: 30),
+                ),
+                SizedBox(
+                width: 60,
+                  child:
+                  TextField(
+                    decoration: InputDecoration(
+                      hintText: '00',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    style: TextStyle(fontSize: 16),
+                    onChanged: (value) {
+                      setState(() {
+                        _minutes = double.tryParse(value) ?? 0.0;
                       });
                     },
 
                   ),
                 ),
                 SizedBox(
-                width: 113, // Set your desired width here
+                width: 90, // Set your desired width here
                 child: DropdownButtonFormField<bool>(
-                    initialValue: _isAMorPM==false,
+                    initialValue: _isAM==true,
                     items: const [
                       DropdownMenuItem(
                         value: true,
@@ -152,7 +227,7 @@ class _SleepCalcScreenState extends State<SleepCalcScreen> {
                     ],
                     onChanged: (value) {
                       setState(() {
-                        _isAMorPM = value ?? false;
+                        _isAM = value ?? false;
                       });
                     },
                   ),
@@ -166,7 +241,7 @@ class _SleepCalcScreenState extends State<SleepCalcScreen> {
             const SizedBox(height: 24),
             ElevatedButton.icon(
               onPressed: () {
-                _presenter.calculateSleepDuration(_age, _yearOrMonth, _sleepOrWakeUp, _wakeOrSleepTime, _isAMorPM);
+                _showCalcDialog();
               },
               icon: const Icon(Icons.calculate),
               label: const Text('Calculate Sleep'),
