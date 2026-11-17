@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../presenters/sleepjournal_presenter.dart';
 import '../models/sleepjournal_model.dart';
+import '../views/app_top_bar.dart';
 
 class SleepJournalView extends StatefulWidget {
   const SleepJournalView({super.key});
@@ -88,6 +89,80 @@ class _SleepJournalViewState extends State<SleepJournalView> {
       setState(() {});
     }
   }
+  Future<void> _showEditJournalDialog(SleepJournal journal) async {
+    final titleController = TextEditingController(text: journal.title);
+    final contentController = TextEditingController(text: journal.content);
+    
+    final shouldEdit = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text('Edit sleep journal'),
+          content: SizedBox(
+            width: 400,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: titleController,
+                    decoration: const InputDecoration(
+                      labelText: 'Title of entry',
+                      border: OutlineInputBorder(),
+                    )
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: contentController,
+                    maxLines: 6,
+                    minLines: 3,
+                    decoration: const InputDecoration(
+                      labelText: 'Content of entry',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(dialogContext, false);
+              }, 
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: () {
+                if(titleController.text.trim().isEmpty ||
+                contentController.text.trim().isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        'Please enter the new title and contents of this journal',
+                      )
+                    )
+                  );
+                  return;
+              }
+              Navigator.pop(dialogContext, true);
+              },
+              child: const Text('Save changes'),
+            )
+          ]
+        );
+      }
+    );
+    if(shouldEdit == true && mounted){
+      _sleepJournalPresenter.editJournal(
+        journal: journal,
+        newTitle: titleController.text.trim(),
+        newContent: contentController.text.trim(),
+        originalDate: journal.journalDate,
+      );
+      setState(() {});
+    }
+  }
   void _deleteJournal(SleepJournal journal){
     setState(() {
       _sleepJournalPresenter.deleteJournals(journal);
@@ -126,10 +201,21 @@ class _SleepJournalViewState extends State<SleepJournalView> {
             ],
           ),
         ),
-        trailing: IconButton(
+
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+          IconButton(
           icon: const Icon(Icons.delete_outline),
           tooltip: 'Delete Entry',
           onPressed: () => _deleteJournal(journal),
+        ),
+        IconButton(
+          icon: const Icon(Icons.edit),
+          tooltip: 'Edit Entry',
+          onPressed: () => _showEditJournalDialog(journal),
+        ),
+          ],
         ),
       ),
     );
@@ -140,10 +226,9 @@ class _SleepJournalViewState extends State<SleepJournalView> {
     final journals = _sleepJournalPresenter.searchJournals(
       _searchQuery,
     );
-
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sleep Journal'),
+      appBar: const AppTopBar(
+        title: 'Sleep Journal',
       ),
       body: Column(
         children: [
