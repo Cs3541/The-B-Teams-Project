@@ -23,6 +23,23 @@ class SleepJournalPresenter {
     _journals.add(journal);
   }
 
+  void editJournal({
+    required SleepJournal journal,
+    required String newTitle,
+    required String newContent,
+    required DateTime originalDate
+  }) {
+    final index = _journals.indexOf(journal);
+    if (index != -1) {
+      final updatedJournal = SleepJournal(
+        title: newTitle,
+        content: newContent,
+        journalDate: originalDate,
+      );
+      _journals[index] = updatedJournal;
+    }
+  }
+
   List<SleepJournal> searchJournals(String query){
     if(query.toString().isEmpty){
       return journals;
