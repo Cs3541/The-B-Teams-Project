@@ -234,10 +234,6 @@ class _SleepCalcScreenState extends State<SleepCalcScreen> {
                 ),
               ],
             ),
-
-            
-            
-
             const SizedBox(height: 24),
             ElevatedButton.icon(
               onPressed: () {
@@ -245,6 +241,93 @@ class _SleepCalcScreenState extends State<SleepCalcScreen> {
               },
               icon: const Icon(Icons.calculate),
               label: const Text('Calculate Sleep'),
+            ),
+            
+            
+            Table(
+              border: TableBorder.all(),
+              columnWidths: const <int, TableColumnWidth>{
+                0: IntrinsicColumnWidth(),
+                1: FlexColumnWidth(),
+              },
+              defaultVerticalAlignment: .middle,
+              children: <TableRow>[
+                TableRow(
+                  decoration: const BoxDecoration(color: Colors.grey),
+                  children: <Widget>[
+                    Text('Age Group', style: TextStyle(fontSize: 16)),
+                    Text('Age', style: TextStyle(fontSize: 16)),
+                    Text('Sleep Recommended Daily', style: TextStyle(fontSize: 16)),
+                  ],
+                ),
+                TableRow(
+                  children: <Widget>[
+                    Text('Newborn', style: TextStyle(fontSize: 16)),
+                    Text('0-3 months', style: TextStyle(fontSize: 16)),
+                    Text('14-17 hours', style: TextStyle(fontSize: 16)),
+                  ],
+                ),
+                TableRow(
+                  children: <Widget>[
+                    Text('Infant', style: TextStyle(fontSize: 16)),
+                    Text('4-12 months', style: TextStyle(fontSize: 16)),
+                    Text('12-16 hours', style: TextStyle(fontSize: 16)),
+                  ],
+                ),
+                TableRow(
+                  children: <Widget>[
+                    Text('Toddler', style: TextStyle(fontSize: 16)),
+                    Text('1-2 years', style: TextStyle(fontSize: 16)),
+                    Text('11-14 hours', style: TextStyle(fontSize: 16)),
+                  ],
+                ),
+                TableRow(
+                  children: <Widget>[
+                    Text('Preschool', style: TextStyle(fontSize: 16)),
+                    Text('3-5 years', style: TextStyle(fontSize: 16)),
+                    Text('10-13 hours', style: TextStyle(fontSize: 16)),
+                  ],
+                ),
+                TableRow(
+                  children: <Widget>[
+                    Text('School Age', style: TextStyle(fontSize: 16)),
+                    Text('6-12 years', style: TextStyle(fontSize: 16)),
+                    Text('9-12 hours', style: TextStyle(fontSize: 16)),
+                  ],
+                ),
+                TableRow(
+                  children: <Widget>[
+                    Text('Teen', style: TextStyle(fontSize: 16)),
+                    Text('13-17 years', style: TextStyle(fontSize: 16)),
+                    Text('8-10 hours', style: TextStyle(fontSize: 16)),
+                  ],
+                ),
+                TableRow(
+                  children: <Widget>[
+                    Text('Adult', style: TextStyle(fontSize: 16)),
+                    Text('18-60 years', style: TextStyle(fontSize: 16)),
+                    Text('7+ hours', style: TextStyle(fontSize: 16)),
+                  ],
+                ),
+                TableRow(
+                  children: <Widget>[
+                    Text('Adult', style: TextStyle(fontSize: 16)),
+                    Text('61-64 years', style: TextStyle(fontSize: 16)),
+                    Text('7-9 hours', style: TextStyle(fontSize: 16)),
+                  ],
+                ),
+                TableRow(
+                  children: <Widget>[
+                    Text('Adult', style: TextStyle(fontSize: 16)),
+                    Text('65+ years', style: TextStyle(fontSize: 16)),
+                    Text('7-8 hours', style: TextStyle(fontSize: 16)),
+                  ],
+                ),
+              ],
+            ),
+            Text(
+              'Source: The CDC, https://www.cdc.gov/sleep/about/index.html',
+              style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
             ),
           ],
         ),
