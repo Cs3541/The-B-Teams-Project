@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+
 
 class SleepCalcPresenter {
 
-  double calculateSleepDuration(int age, bool isYear, bool isWakeUpOrBedtime, double hours, double minutes, bool isAM) {
+  String calculateSleepDuration(int age, bool isYear, bool isWakeUpOrBedtime, double hours, double minutes, bool isAM) {
 
     double wakeUpOrBedTime = 0;
     // Calculate sleep duration based on age
@@ -40,8 +40,49 @@ class SleepCalcPresenter {
       }
 
     }
+    //Gathers the total minutes
+    int totalMinutes = minuteManager(wakeUpOrBedTime, minutes);
+    //handles if total minutes is >=60
+    if (totalMinutes >= 60){
+      totalMinutes += -60;
+      wakeUpOrBedTime +=1;
+    }
+    //handles if total minutes is below 0
+    if (totalMinutes < 0){
+      totalMinutes += 60;
+      wakeUpOrBedTime -= 1;
+    }
+    
+    //finds if it is AM or PM and adjusts wakeUpOrBedTime accordingly
+    String infoText = '';
+    double totalTime = wakeUpOrBedTime + (minutes / 60.0);
 
-    return wakeUpOrBedTime;
+      if (totalTime >= 12) {
+      infoText = 'PM';
+      wakeUpOrBedTime = wakeUpOrBedTime - 12;
+    } else {
+      infoText = 'AM';
+    }
+
+    
+    //Adds extra zeros to the hours and minutes section to match "00:00" format 
+    if (wakeUpOrBedTime < 12) {
+      if (totalMinutes < 10){
+          return "0${wakeUpOrBedTime.toInt()}:0$totalMinutes $infoText";
+      }
+      else{
+          return "0${wakeUpOrBedTime.toInt()}:$totalMinutes $infoText";
+      }
+    }
+    if (wakeUpOrBedTime >= 12) {
+      if (totalMinutes < 10){
+          return "${wakeUpOrBedTime.toInt()}:0$totalMinutes $infoText";
+      }
+      else{
+          return "${wakeUpOrBedTime.toInt()}:$totalMinutes $infoText";
+      }
+    }
+  return "Something Broke";
   }
 
   double findSleepDuration(int age, bool isYear) {
@@ -71,6 +112,15 @@ class SleepCalcPresenter {
     }
 
     return sleepDuration;
+  }
+
+
+  int minuteManager(double wakeUpOrBedTime, double minutes) {
+  int wholeHours = wakeUpOrBedTime.toInt();
+  int minutesInHours = ((wakeUpOrBedTime - wholeHours.toDouble()) * 60 + minutes).toInt();
+    
+    
+    return minutesInHours;
   }
 
 }

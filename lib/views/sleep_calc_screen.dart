@@ -22,38 +22,46 @@ class _SleepCalcScreenState extends State<SleepCalcScreen> {
 
   String resultTextString() {
     String infoText = '';
-    double calculatedTime = _presenter.calculateSleepDuration(_age, _yearOrMonth, _sleepOrWakeUp, _hours, _minutes, _isAM);
+    String calculatedTime = _presenter.calculateSleepDuration(_age, _yearOrMonth, _sleepOrWakeUp, _hours, _minutes, _isAM);
+    
+    //Faulty input catcher
+    if (_age < 0){
+      return "Error: Please enter an age at least equal to or greater than 0";
+    }
+    if (_hours < 0 || _hours > 12){
+      return "Error: Please enter numbers between 0 and 12 for hours ";
+    }
+    if (_minutes < 0 || _minutes > 60){
+      return "Error: Please enter numbers between 0 and 60 for minutes ";
+    }
+
+    //This thing can get simplified in the future
     // The AM section
     if (_isAM){
       // Wake up time calculation
       if (!_sleepOrWakeUp){
-      infoText = 'Calculated Wake Up Time1: ';
+      infoText = 'Calculated Wake Up Time: ';
       }
       // bedtime calculation
       else if (_sleepOrWakeUp){
-        infoText = 'Calculated Bedtime2: ';
+        infoText = 'Calculated Bedtime: ';
       }
     }
     // The PM section
     if (!_isAM){
       // Wake up time calculation
       if (!_sleepOrWakeUp){
-        infoText = 'Calculated Wake Up Time3: ';
+        infoText = 'Calculated Wake Up Time: ';
       }
       // bedtime calculation
       else if (_sleepOrWakeUp){
-        infoText = 'Calculated Bedtime4: ';
+        infoText = 'Calculated Bedtime: ';
       }
     }
 
-    if (calculatedTime >= 12) {
-      infoText += '${calculatedTime - 12} PM';
-    } else {
-      infoText += '$calculatedTime AM';
-    }
-
-    return infoText;
+    return infoText + calculatedTime;
   }
+
 
   Future<void> _showCalcDialog() async {
     final formKey = GlobalKey<FormState>();
