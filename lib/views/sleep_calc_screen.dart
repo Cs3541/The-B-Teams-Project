@@ -35,30 +35,15 @@ class _SleepCalcScreenState extends State<SleepCalcScreen> {
       return "Error: Please enter numbers between 0 and 60 for minutes ";
     }
 
-    //This thing can get simplified in the future
-    // The AM section
-    if (_isAM){
-      // Wake up time calculation
-      if (!_sleepOrWakeUp){
+    // Wake up time message
+    if (!_sleepOrWakeUp){
       infoText = 'Calculated Wake Up Time: ';
-      }
-      // bedtime calculation
-      else if (_sleepOrWakeUp){
-        infoText = 'Calculated Bedtime: ';
-      }
     }
-    // The PM section
-    if (!_isAM){
-      // Wake up time calculation
-      if (!_sleepOrWakeUp){
-        infoText = 'Calculated Wake Up Time: ';
-      }
-      // bedtime calculation
-      else if (_sleepOrWakeUp){
-        infoText = 'Calculated Bedtime: ';
-      }
+    // bedtime message
+    else if (_sleepOrWakeUp){
+      infoText = 'Calculated Bedtime: ';
     }
-
+    
     return infoText + calculatedTime;
   }
 
@@ -178,7 +163,7 @@ class _SleepCalcScreenState extends State<SleepCalcScreen> {
                   ),
 
                   SizedBox(
-                    width: 200, // Set your desired width here
+                    width: 200,
                       child: DropdownButtonFormField<bool>(
                         initialValue: _sleepOrWakeUp==true,
                         items: const [
@@ -249,7 +234,7 @@ class _SleepCalcScreenState extends State<SleepCalcScreen> {
                         ),
                       ),
                       SizedBox(
-                      width: 90, // Set your desired width here
+                      width: 90,
                       child: DropdownButtonFormField<bool>(
                           initialValue: _isAM==true,
                           items: const [
