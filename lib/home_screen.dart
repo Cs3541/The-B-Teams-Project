@@ -4,6 +4,8 @@ import 'views/app_top_bar.dart';
 
 import 'views/sleep_log_screen.dart';
 
+import 'views/featured_articles_screen.dart';
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -32,6 +34,19 @@ class HomeScreen extends StatelessWidget {
               icon: const Icon(Icons.bedtime),
               label: const Text('Log My Sleep'),
             ),
+            const SizedBox(height: 16),
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const FeaturedArticlesScreen(),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.menu_book),
+              label: const Text('Featured Articles'),
+            )
           ],
         ),
       ),

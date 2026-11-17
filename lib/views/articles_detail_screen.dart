@@ -1,4 +1,6 @@
+
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../models/articles_model.dart';
 import '../presenters/saved_articles_presenter.dart';
@@ -46,6 +48,24 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
           duration: const Duration(seconds: 2),
         ),
       );
+    }
+  }
+
+  // Open external research article.
+  Future<void> _openArticle(String link) async {
+    final Uri url = Uri.parse(link);
+
+    if (!await launchUrl(
+      url,
+      mode: LaunchMode.externalApplication,
+    )) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Could not open research article.'),
+          ),
+        );
+      }
     }
   }
 
@@ -164,6 +184,38 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                 height: 1.7,
               ),
             ),
+
+            // External research link (only if available).
+            if (article.link != null) ...[
+
+              const SizedBox(height: 24),
+
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    _openArticle(article.link!);
+                  },
+
+                  icon: const Icon(Icons.open_in_new),
+
+                  label: const Text(
+                    'Read Research Article',
+                  ),
+
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.pink,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 14,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+              ),
+            ],
 
             const SizedBox(height: 30),
           ],
