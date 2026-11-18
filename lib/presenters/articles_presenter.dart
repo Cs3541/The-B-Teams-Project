@@ -1,5 +1,6 @@
 import '../models/articles_model.dart';
 
+
 class ArticlesPresenter {
 
   // Sample sleep health articles.
@@ -8,116 +9,140 @@ class ArticlesPresenter {
     // Article 1
     SleepArticle(
       id: 'article1',
-      title: 'Understanding the Importance of Sleep',
+      title: 'Understanding the Science of Sleep',
       category: 'Sleep Basics',
       summary:
-          'Learn why getting enough sleep is important for your health.',
+          'The science behind why sleep is crucial for your health and well-being.',
       content: '''
-Sleep is an essential part of maintaining good physical and mental health.
-
-During sleep, your body repairs itself, your brain processes information,
-and your body prepares for the next day.
-
-Getting enough sleep can help improve concentration, memory, mood, and
-overall well-being.
-
-Establishing a consistent sleep schedule and creating a comfortable
-sleep environment can help support healthy sleep habits.
+Increase your understanding of sleep
+Taking this link will lead you to lots of articles relating to sleep science
 ''',
+      link:
+        'https://academic.oup.com/sleep/search-results?q=&tax=sleep/12',
       readingTime: 3,
     ),
 
     // Article 2
     SleepArticle(
       id: 'article2',
-      title: 'Tips for Better Sleep',
-      category: 'Sleep Habits',
+      title: 'Insomnia',
+      category: 'Sleep Basics',
       summary:
-          'Discover practical habits that can help you sleep better.',
+          'Learn about the causes and treatments of insomnia.',
       content: '''
-Developing healthy sleep habits can make it easier to fall asleep and
-wake up feeling rested.
-
-Try going to bed and waking up at approximately the same time each day.
-
-Create a relaxing bedtime routine, such as reading a book or listening
-to calming music.
-
-Keep your bedroom quiet, dark, and comfortable.
-
-Avoid caffeine late in the day, and give yourself time to relax before
-going to bed.
+Broden your knowledge of insomnia
+Taking this link will lead you to lots of articles relating to insomnia
 ''',
+      link:
+        'https://academic.oup.com/sleep/search-results?q=&tax=sleep/4',
       readingTime: 4,
     ),
 
     // Article 3
     SleepArticle(
       id: 'article3',
-      title: 'How Screen Time Affects Sleep',
-      category: 'Technology',
+      title: 'Sleep Across the Lifespan',
+      category: 'Sleep',
       summary:
-          'Understand how electronic devices can affect your bedtime.',
+          'Learn about how the different stages of life affect sleep patterns and needs.',
       content: '''
-Using electronic devices before bed can make it harder for some people
-to relax and fall asleep.
-
-Bright light from screens can affect your body's natural sleep-wake
-cycle. Engaging content, games, and notifications can also keep your
-mind active when you are trying to wind down.
-
-Consider putting devices away before bedtime and choosing a relaxing
-activity instead.
-
-You can also silence notifications at night to reduce interruptions.
+Sleep patterns and need changed in life due to a persons age.
+By clicking this link you will be able to learn more about how sleep changed across the lifespan.
 ''',
+      link:
+        'https://academic.oup.com/sleep/search-results?q=&tax=sleep/14',
       readingTime: 3,
     ),
 
     // Article 4
     SleepArticle(
       id: 'article4',
-      title: 'Understanding Your Sleep Schedule',
-      category: 'Sleep Basics',
+      title: 'Sleep Health and Safety',
+      category: 'Sleep',
       summary:
-          'Learn how a consistent sleep schedule supports your body clock.',
+          'Sleep health and safety are much more important then we make them out to be. Learning about them can help you relaize your own.',
       content: '''
-Your body has an internal clock that helps regulate when you feel
-awake and when you feel sleepy.
-
-Keeping a reasonably consistent sleep schedule helps your body maintain
-a regular sleep-wake rhythm.
-
-Large changes in your bedtime and wake-up time can make it harder to
-feel rested.
-
-Try maintaining a regular schedule throughout the week when possible.
+Most people don't realize how important sleep health and safety is.
+Taking this link will lead you to articles correlated to sleep health and safety.
 ''',
+      link:
+        'https://academic.oup.com/sleep/search-results?q=&tax=sleep/15',
       readingTime: 3,
     ),
 
     // Article 5
     SleepArticle(
       id: 'article5',
-      title: 'Managing Stress Before Bed',
-      category: 'Mental Wellness',
+      title: 'Cognitive, Affective and Behavioral Neuroscience of Sleep',
+      category: 'Sleep',
       summary:
-          'Explore relaxing techniques that may help you unwind at night.',
+          'The science that is behing cognitve, affective and behavioral aspects of sleep',
       content: '''
-Stress and worries can sometimes make it difficult to relax at bedtime.
-
-Creating a calming evening routine may help you transition from the
-activities of the day to sleep.
-
-You might try slow breathing, gentle stretching, listening to calming
-music, or writing down tasks you want to remember for tomorrow.
-
-Try to give yourself some quiet time before bed rather than rushing
-straight from a busy activity into trying to sleep.
-
-If sleep difficulties continue to affect your daily life, consider
-talking with a healthcare professional.
+Update your knowledge of the these aspects of sleep.
+Taking this link provided below will lead you to articles that go more into detail about those aspects.
 ''',
+      link:
+        'https://academic.oup.com/sleep/search-results?q=&tax=sleep/13',
+      readingTime: 4,
+    ),
+
+    SleepArticle(
+      id: 'article6',
+      title: 'Sleep and Metabolism',
+      category: 'Sleep',
+      summary:
+          'Learn about metabolism and how it is affected by sleep.',
+      content: '''
+Learn about the correlation between sleep and metabolism.
+Taking this link provided below will lead you to articles that go more into detail about those aspects.
+''',
+      link:
+        'https://academic.oup.com/sleep/search-results?q=&tax=sleep/8',
+      readingTime: 4,
+    ),
+
+    SleepArticle(
+      id: 'article7',
+      title: 'Neurological Disorders',
+      category: 'Sleep Disorders',
+      summary:
+          'Learn about neurological disorders and their relationship with sleep.',
+      content: '''
+Broden your knowledge of neurological disorders and how they relate to sleep.
+Taking this link provided below will lead you to articles that go more into detail about those aspects.
+''',
+      link:
+        'https://academic.oup.com/sleep/search-results?q=&tax=sleep/11',
+      readingTime: 4,
+    ),
+
+    SleepArticle(
+      id: 'article8',
+      title: 'Sleep Disordered Breathing',
+      category: 'Sleep Disorders',
+      summary:
+          'Learn about sleep disordered breathing and its impact on sleep quality.',
+      content: '''
+Broden your knowledge of sleep disordered breathing and how it affects sleep.
+Taking this link provided below will lead you to articles that go more into detail about those aspects.
+''',
+      link:
+        'https://academic.oup.com/sleep/search-results?q=&tax=sleep/10',
+      readingTime: 4,
+    ),
+
+    SleepArticle(
+      id: 'article9',
+      title: 'Circadian Disorders',
+      category: 'Sleep Disorders',
+      summary:
+          'Learn about circadian disorders',
+      content: '''
+Broden your knowledge of circadian disorders and how they affect sleep.
+Taking this link provided below will lead you to articles that go more into detail about those aspects.
+''',
+      link:
+        'https://academic.oup.com/sleep/search-results?q=&tax=sleep/2',
       readingTime: 4,
     ),
   ];
