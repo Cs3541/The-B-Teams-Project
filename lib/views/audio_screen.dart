@@ -14,6 +14,12 @@ class AudioListScreen extends StatefulWidget {
 class _AudioListScreenState extends State<AudioListScreen> {
   final AudioPresenter _presenter = AudioPresenter();
 
+  @override
+  void dispose() {
+    _presenter.dispose();
+    super.dispose();
+  }
+
   Future<void> _showAddAudioDialog() async {
     final formKey = GlobalKey<FormState>();
     String name = '';
