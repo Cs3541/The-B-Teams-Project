@@ -22,4 +22,12 @@ class AudioPlaybackState {
     this.volume = 1,
     this.error,
   });
+
+  AudioPlaybackState copyWith({double? volume}) => AudioPlaybackState(
+    status: status,
+    position: position,
+    duration: duration,
+    volume: volume ?? this.volume,
+    error: error,
+  );
 }

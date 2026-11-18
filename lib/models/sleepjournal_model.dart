@@ -1,5 +1,3 @@
-
-
 class SleepJournal {
 
   final String title;
