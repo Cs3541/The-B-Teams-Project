@@ -66,7 +66,7 @@ class SleepCalcPresenter {
 
     
     //Adds extra zeros to the hours and minutes section to match "00:00" format 
-    if (wakeUpOrBedTime < 12) {
+    if (wakeUpOrBedTime < 10) {
       if (totalMinutes < 10){
           return "0${wakeUpOrBedTime.toInt()}:0$totalMinutes $infoText";
       }
@@ -74,7 +74,7 @@ class SleepCalcPresenter {
           return "0${wakeUpOrBedTime.toInt()}:$totalMinutes $infoText";
       }
     }
-    if (wakeUpOrBedTime >= 12) {
+    if (wakeUpOrBedTime >= 10) {
       if (totalMinutes < 10){
           return "${wakeUpOrBedTime.toInt()}:0$totalMinutes $infoText";
       }
