@@ -82,10 +82,11 @@ class _SleepJournalViewState extends State<SleepJournalView> {
     );
 
     if(shouldSave == true && mounted){
-      _sleepJournalPresenter.addJournal(
+      await _sleepJournalPresenter.addJournal(
         title: titleController.text.trim(),
         content: contentController.text.trim(),
       );
+      if (!mounted) return;
       setState(() {});
     }
   }
@@ -160,13 +161,16 @@ class _SleepJournalViewState extends State<SleepJournalView> {
         newContent: contentController.text.trim(),
         originalDate: journal.journalDate,
       );
+      if (!mounted) return;
       setState(() {});
     }
   }
-  void _deleteJournal(SleepJournal journal){
-    setState(() {
-      _sleepJournalPresenter.deleteJournals(journal);
-    });
+  Future<void> _deleteJournal(SleepJournal journal) async {
+      await _sleepJournalPresenter.deleteJournals(journal);
+
+      if (!mounted) return;
+      setState(() {});
+    
   }
 
   Widget _buildJournalCard(SleepJournal journal){
@@ -219,6 +223,23 @@ class _SleepJournalViewState extends State<SleepJournalView> {
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadJournals();
+  }
+
+  Future<void> _loadJournals() async {
+    try {
+      await _sleepJournalPresenter.loadJournals();
+
+      if (!mounted) return;
+      setState((){});
+    } catch (e) {
+      debugPrint('Error loading journals $e');
+    }
   }
 
   @override
