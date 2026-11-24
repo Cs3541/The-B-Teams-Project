@@ -76,7 +76,7 @@ class SleepLogPresenter {
     return logs;
   }
 
-  // Save a sleep log to Firebase.
+  // Save a sleep log, including any dream information, to Firebase.
   Future<void> saveLog(SleepLog log) async {
     final userId = await _getUserId();
 
@@ -93,5 +93,4 @@ class SleepLogPresenter {
         .child(id)
         .remove();
   }
-
 }

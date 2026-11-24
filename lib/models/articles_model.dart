@@ -5,6 +5,7 @@ class SleepArticle {
   final String summary;
   final String content;
   final int readingTime;
+  final String? link;
 
   const SleepArticle({
     required this.id,
@@ -13,5 +14,6 @@ class SleepArticle {
     required this.summary,
     required this.content,
     required this.readingTime,
+    this.link,
   });
 }
