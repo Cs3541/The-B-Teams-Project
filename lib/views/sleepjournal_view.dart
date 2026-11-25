@@ -15,6 +15,23 @@ class _SleepJournalViewState extends State<SleepJournalView> {
 
   String _searchQuery = '';
 
+  @override
+  void initState() {
+    super.initState();
+    _loadJournals();
+  }
+
+  Future<void> _loadJournals() async {
+    try {
+      await _sleepJournalPresenter.loadJournals();
+
+      if (!mounted) return;
+      setState(() {});
+    } catch (e) {
+      debugPrint('Error loading journals: $e');
+    }
+  }
+
   Future<void> _showAddJournalDialog() async {
     final titleController = TextEditingController();
     final contentController = TextEditingController();
@@ -88,6 +105,82 @@ class _SleepJournalViewState extends State<SleepJournalView> {
       setState(() {});
     }
   }
+  Future<void> _showEditJournalDialog(SleepJournal journal) async {
+    final titleController = TextEditingController(text: journal.title);
+    final contentController = TextEditingController(text: journal.content);
+    
+    final shouldEdit = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text('Edit sleep journal'),
+          content: SizedBox(
+            width: 400,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: titleController,
+                    decoration: const InputDecoration(
+                      labelText: 'Title of entry',
+                      border: OutlineInputBorder(),
+                    )
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: contentController,
+                    maxLines: 6,
+                    minLines: 3,
+                    decoration: const InputDecoration(
+                      labelText: 'Content of entry',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(dialogContext, false);
+              }, 
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: () {
+                if(titleController.text.trim().isEmpty ||
+                contentController.text.trim().isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        'Please enter the new title and contents of this journal',
+                      )
+                    )
+                  );
+                  return;
+              }
+              Navigator.pop(dialogContext, true);
+              },
+              child: const Text('Save changes'),
+            )
+          ]
+        );
+      }
+    );
+    if(shouldEdit == true && mounted){
+      await _sleepJournalPresenter.editJournal(
+        journal: journal,
+        newTitle: titleController.text.trim(),
+        newContent: contentController.text.trim(),
+        originalDate: journal.journalDate,
+      );
+      if(!mounted) return;
+      setState(() {});
+    }
+  }
+
   void _deleteJournal(SleepJournal journal){
     setState(() {
       _sleepJournalPresenter.deleteJournals(journal);
@@ -98,7 +191,6 @@ class _SleepJournalViewState extends State<SleepJournalView> {
     final formattedDate = DateFormat(
       'MMMM dd, yyyy | h:mm a',
     ).format(journal.journalDate);
-
     return Card(
       margin: const EdgeInsets.symmetric(
         horizontal: 12,
@@ -186,40 +278,3 @@ class _SleepJournalViewState extends State<SleepJournalView> {
     );
   }
 }
-
-
-/*
-  @override
-  void initState() {
-    super.initState();
-  }
-  
-  @override
-  Widget build(BuildContext context) {
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sleep Journal'),
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: const InputDecoration(
-                hintText: 'Search sleep journal entries...',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  _searchQuery = value;
-                });
-              },
-            ), //Textfield
-          ), //Padding
-        ]
-      ),
-    );
-  }
-*/

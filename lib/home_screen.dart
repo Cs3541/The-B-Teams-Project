@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'views/app_top_bar.dart';
+import 'views/sleep_log_screen.dart';
+import 'views/sleep_calc_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -7,11 +10,42 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text(
-          'The Sweet Dreams App',
-            style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold),
-        ),
-      ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'The Sweet Dreams App',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SleepLogScreen(),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.bedtime),
+              label: const Text('Log My Sleep'),
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SleepCalcScreen(),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.calculate),
+              label: const Text('Calculate A Sleep Schedule'),
+            ),
+          ]
+        )
+      )
     );
   }
 }
