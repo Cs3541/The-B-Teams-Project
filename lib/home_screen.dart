@@ -4,7 +4,6 @@ import 'views/sleep_log_screen.dart';
 import 'views/sleep_calc_screen.dart';
 
 import 'views/featured_articles_screen.dart';
->>>>>>> main
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -36,7 +35,6 @@ class HomeScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             
->>>>>>> main
             ElevatedButton.icon(
               onPressed: () {
                 Navigator.push(
@@ -62,7 +60,6 @@ class HomeScreen extends StatelessWidget {
               icon: const Icon(Icons.menu_book),
               label: const Text('Featured Articles'),
             ),
->>>>>>> main
           ]
         )
       )
