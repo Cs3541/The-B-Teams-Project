@@ -1,13 +1,15 @@
-import '../models/analytics_model.dart';
+import '../models/sleep_log_model.dart';
 
 class AnalyticsPresenter {
-  final List<Analytics> _analytics = [];
 
-  List<Analytics> get analytics => _analytics;
-
-  void addAnalytics(List<String> sleep) {
-    if (sleep.isNotEmpty) {
-      _analytics.add(Analytics(sleep: sleep));
+  double getAverageSleep(List<SleepLog> data) {
+    double totalSleep = 0;
+  
+    for (int i = 0; i < data.length; i++){
+      SleepLog temp = data.elementAt(i);
+      totalSleep += temp.duration.inMinutes / 60; // Convert duration to hours
     }
-  }
+    double avgSleep = totalSleep/data.length;
+    return double.parse((avgSleep).toStringAsFixed(2));
+}
 }

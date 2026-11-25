@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "151863431344",
+    "firebase_url": "https://b-teams-sleep-tracker-default-rtdb.firebaseio.com",
+    "project_id": "b-teams-sleep-tracker",
+    "storage_bucket": "b-teams-sleep-tracker.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:151863431344:android:6d378e3961e42fa0f3eb75",
+        "android_client_info": {
+          "package_name": "com.example.the_b_teams_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBx3pHGTbXhiCM8bqyn4rzn9jfzq6RBCwg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

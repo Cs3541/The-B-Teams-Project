@@ -3,12 +3,16 @@ import 'views/app_top_bar.dart';
 import 'views/sleep_log_screen.dart';
 import 'views/sleep_calc_screen.dart';
 
+import 'views/featured_articles_screen.dart';
+>>>>>>> main
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const AppTopBar(title: 'Home'),
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -30,7 +34,9 @@ class HomeScreen extends StatelessWidget {
               icon: const Icon(Icons.bedtime),
               label: const Text('Log My Sleep'),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
+            
+>>>>>>> main
             ElevatedButton.icon(
               onPressed: () {
                 Navigator.push(
@@ -43,6 +49,20 @@ class HomeScreen extends StatelessWidget {
               icon: const Icon(Icons.calculate),
               label: const Text('Calculate A Sleep Schedule'),
             ),
+            
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const FeaturedArticlesScreen(),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.menu_book),
+              label: const Text('Featured Articles'),
+            ),
+>>>>>>> main
           ]
         )
       )

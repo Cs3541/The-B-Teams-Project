@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../presenters/sleepjournal_presenter.dart';
 import '../models/sleepjournal_model.dart';
+import '../views/app_top_bar.dart';
 
 class SleepJournalView extends StatefulWidget {
   const SleepJournalView({super.key});
@@ -98,10 +99,11 @@ class _SleepJournalViewState extends State<SleepJournalView> {
     );
 
     if(shouldSave == true && mounted){
-      _sleepJournalPresenter.addJournal(
+      await _sleepJournalPresenter.addJournal(
         title: titleController.text.trim(),
         content: contentController.text.trim(),
       );
+      if (!mounted) return;
       setState(() {});
     }
   }
@@ -218,10 +220,21 @@ class _SleepJournalViewState extends State<SleepJournalView> {
             ],
           ),
         ),
-        trailing: IconButton(
+
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+          IconButton(
           icon: const Icon(Icons.delete_outline),
           tooltip: 'Delete Entry',
           onPressed: () => _deleteJournal(journal),
+        ),
+        IconButton(
+          icon: const Icon(Icons.edit),
+          tooltip: 'Edit Entry',
+          onPressed: () => _showEditJournalDialog(journal),
+        ),
+          ],
         ),
       ),
     );
@@ -232,10 +245,9 @@ class _SleepJournalViewState extends State<SleepJournalView> {
     final journals = _sleepJournalPresenter.searchJournals(
       _searchQuery,
     );
-
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sleep Journal'),
+      appBar: const AppTopBar(
+        title: 'Sleep Journal',
       ),
       body: Column(
         children: [
